@@ -8,7 +8,7 @@ export const routes: Routes = [
   },
   {
     path: 'basic',
-    loadChildren: () => import('./basic/basic.routes').then(m => m.BASIC_ROUTES),
+    loadChildren: () => import('./basic/basic.routes').then(m => m.routes),
     title: 'Shopping Cart - Basic Level (RxJS)'
   },
   {
