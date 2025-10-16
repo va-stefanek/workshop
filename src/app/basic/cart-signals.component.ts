@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CartSignalsService} from './services/cart-signals.service';
 import {Product} from '../shared/models';
+import {CartStore} from './cart.store';
 
 @Component({
   selector: 'app-cart-signals',
@@ -122,6 +123,7 @@ import {Product} from '../shared/models';
 })
 export class CartSignalsComponent {
   cartService = inject(CartSignalsService);
+  cartStore = inject(CartStore);
 
   sampleProducts: Product[] = [
     {

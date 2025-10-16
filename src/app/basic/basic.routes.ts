@@ -19,4 +19,10 @@ export const routes: Routes = [
       import('./cart-signals.component').then(m => m.CartSignalsComponent),
     title: 'Cart - Signals'
   },
+  {
+    path: 'signal-store',
+    loadComponent: () =>
+      import('./cart-store.component').then(m => m.CartStoreComponent),
+    title: 'Cart - Signal Store'
+  }
 ];
