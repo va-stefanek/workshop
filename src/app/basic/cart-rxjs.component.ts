@@ -1,7 +1,7 @@
 // step-1-rxjs/cart-rxjs.component.ts - PROSTSZA WERSJA
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {CartRxjsService} from './services/shopping-cart-rxjs.service';
+import {ShoppingCartRxjsService} from './services/shopping-cart-rxjs.service';
 import {Product} from '../shared/models';
 
 @Component({
@@ -28,7 +28,7 @@ import {Product} from '../shared/models';
 
       <!-- Cart Items -->
       <section class="cart">
-        <h2>Cart ({{ cartService.getItemCount() | async }} items)</h2>
+        <h2>Cart ({{ cartService.getTotalItems() | async }} items)</h2>
 
         @if ((cartService.items$ | async)?.length === 0) {
           <p>Your cart is empty</p>
@@ -54,7 +54,7 @@ import {Product} from '../shared/models';
 
         @if ((cartService.items$ | async)?.length! > 0) {
           <div class="cart-total">
-            <h3>Total: \${{ (cartService.getTotal() | async)?.toFixed(2) }}</h3>
+            <h3>Total: \${{ (cartService.getCartSummary() | async)?.finalPrice?.toFixed(2) }}</h3>
             <button (click)="cartService.clearCart()">Clear Cart</button>
           </div>
         }
@@ -122,7 +122,7 @@ import {Product} from '../shared/models';
   `]
 })
 export class CartRxjsComponent {
-  cartService = inject(CartRxjsService);
+  cartService = inject(ShoppingCartRxjsService);
 
   // Sample products for demo
   sampleProducts: Product[] = [

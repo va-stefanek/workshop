@@ -17,10 +17,11 @@ By completing this level, you will:
 
 **Primary Files:**
 - `src/app/basic/services/shopping-cart-rxjs.service.ts` - **STARTER FILE** (your main workspace)
-- `src/app/basic/components/cart-basic.component.ts` - UI component (pre-built)
+- `src/app/basic/cart-rxjs.component.ts` - UI component (pre-built, routed at `/basic/rxjs`)
 
 **Reference Files:**
-- `src/app/basic/services/shopping-cart-signals.service.ts` - **SOLUTION** (don't peek too early!)
+- Full solution: branch `workshop-complete` (`git switch workshop-complete`)
+- `src/app/basic/services/shopping-cart-signals.service.ts` - signals version of the same cart (preview of the next step)
 - `src/app/shared/services/product.service.ts` - Product data service (pre-built)
 
 ## 🏗 Architecture Overview
@@ -73,7 +74,7 @@ export class ShoppingCartRxjsService {
 
 ### Step 2: Navigate to Basic Level
 
-1. Start the development server: `npm start`
+1. Start the development server: `pnpm start`
 2. Open your browser to `http://localhost:4200`
 3. Click on "Basic Level" in the navigation
 4. You should see the basic shopping cart interface
@@ -185,7 +186,7 @@ getCartSummary(): Observable<CartSummary>
 - Calculate total items, total price, discounts, tax, and final price
 - Use the `map` operator to transform cart items
 
-**CartSummary Interface**:
+**CartSummary Interface** (already defined in `src/app/shared/models` — just import it):
 ```typescript
 interface CartSummary {
   totalItems: number;
@@ -210,33 +211,17 @@ getTotalItems(): Observable<number>
 - Sum all item quantities
 - Use RxJS operators
 
-### Task 8: Implement Helper Methods
+### Task 8: Review the Provided Helper Methods
 
-**Goal**: Complete the utility methods for the service.
-
-**Methods to Implement**:
+**Goal**: Understand the utility methods that are already implemented for you at the bottom of the starter file.
 
 ```typescript
-private calculateTotal(items: CartItem[]): number {
-  // Calculate the total price of all items
-  // Include quantity multiplication
-}
-
-private generateId(): string {
-  // Generate unique ID for cart items
-  // Combine timestamp and random string
-}
-
-private saveCartToStorage(): void {
-  // Save current cart items to localStorage
-  // Handle browser compatibility
-}
-
-private loadCartFromStorage(): void {
-  // Load cart items from localStorage
-  // Handle JSON parsing errors gracefully
-}
+private generateId(): string        // unique ID for cart items (timestamp + random string)
+private saveCartToStorage(): void   // persists current items to localStorage
+private loadCartFromStorage(): void // restores items from localStorage (with JSON error handling)
 ```
+
+You will CALL these helpers from the methods you implement in Tasks 1-5 — you don't need to write them.
 
 ## ✅ Testing Your Implementation
 

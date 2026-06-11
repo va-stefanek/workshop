@@ -21,7 +21,8 @@ By completing this level, you will:
 - `src/app/intermediate/components/cart-intermediate.component.ts` - UI component
 
 **Reference Files:**
-- `src/app/basic/services/shopping-cart-signals.service.ts` - Basic signals solution
+- `src/app/basic/services/shopping-cart-signals.service.ts` - basic signals primer (simpler patterns)
+- Full solution: branch `workshop-complete` (`git switch workshop-complete`)
 
 ## 🏗 Architecture Overview
 
@@ -85,11 +86,11 @@ public readonly cartItems = this.items.asReadonly();
 
 ## 📝 Implementation Tasks
 
-### Task 1: Advanced Cart State Management
+### Task 1: Review the Provided State Structure
 
-**Goal**: Implement the core cart functionality using signals with advanced computed patterns.
+**Goal**: Understand the scaffolding that is already in the starter file — the private signals and readonly accessors below are provided; your work starts with the computed signals (Task 2+).
 
-**Key Components**:
+**Provided structure**:
 ```typescript
 export class CartComputedService {
   // Core state
@@ -101,31 +102,33 @@ export class CartComputedService {
   // Readonly accessors
   public readonly cartItems = this.items.asReadonly();
   public readonly currentCategory = this.selectedCategory.asReadonly();
-  
-  // TODO: Implement computed signals
+
+  // YOUR WORK: the computed signals (Tasks 2-4), effects (Task 5)
+  // and cart methods (Task 7) are stubbed with TODOs
 }
 ```
 
 ### Task 2: Implement Advanced Cart Summary
 
-**Goal**: Create a computed signal that calculates cart totals with progressive tax rates and bulk discounts.
+**Goal**: Create a computed signal that calculates cart totals with item discounts and progressive tax rates.
 
 **Requirements**:
 ```typescript
 public readonly cartSummary = computed<CartSummary>(() => {
   const items = this.items();
-  
+
   // TODO: Calculate totals with advanced logic
-  // - Apply bulk discounts for quantities > 3
-  // - Progressive tax: 8% under $500, 10% $500-$1000, 12% over $1000
-  // - Handle luxury tax for items over $1000 each
+  // - totalItems: sum of quantities
+  // - totalPrice: sum of price * quantity
+  // - totalDiscount: per-item discount % applied to price * quantity
+  // - Progressive tax on subtotal: 8% under $500, 10% $500-$1000, 12% over $1000
+  // - finalPrice: subtotal + tax
 });
 ```
 
-**Advanced Discount Logic**:
-- Items with quantity > 3 get minimum 15% discount
-- Luxury items (>$1000) get additional 15% tax rate
-- Category-based bulk discounts
+**Calculation rules**:
+- `subtotal = totalPrice - totalDiscount`
+- Tax tiers apply to the whole subtotal (8% / 10% / 12%)
 
 ### Task 3: Implement Filtering and Sorting
 
@@ -182,7 +185,7 @@ public readonly shippingInfo = computed(() => {
   const summary = this.cartSummary();
   
   // TODO: Calculate shipping costs and delivery estimates
-  // Free shipping over $500, standard $15, express $25
+  // Free shipping over $500, otherwise standard $15
 });
 ```
 
@@ -190,34 +193,25 @@ public readonly shippingInfo = computed(() => {
 
 **Goal**: Use effects for side effects like persistence and analytics logging.
 
-**Requirements**:
+**Requirements** (implement inside the constructor — skeleton only, the bodies are your work):
 ```typescript
 constructor() {
-  this.loadCartFromStorage();
-  
-  // TODO: Auto-save effect
-  effect(() => {
-    const items = this.items();
-    this.saveCartToStorage(items);
-  });
+  // 1. Load persisted cart on startup (which helper does that?)
 
-  // TODO: Analytics logging effect
-  effect(() => {
-    const summary = this.cartSummary();
-    if (summary.totalItems > 0) {
-      console.log('Cart Analytics:', {
-        items: summary.totalItems,
-        total: summary.finalPrice,
-        categories: this.categoryStats().length
-      });
-    }
-  });
+  // 2. Auto-save effect: persist whenever items() changes
+  effect(() => { /* read the signal that should trigger saving, then save */ });
+
+  // 3. Analytics effect: log totals, but only when the cart has items
+  effect(() => { /* read cartSummary(), guard against empty cart, log */ });
 }
 ```
 
-### Task 6: Advanced Effects Service
+**Hint**: an effect re-runs when any signal READ inside it changes — so the
+first line of each effect decides what it reacts to.
 
-**Goal**: The `CartEffectsService` provides additional functionality that complements the main cart service.
+### Reference: Advanced Effects Service (no implementation needed)
+
+**Goal**: Study how `CartEffectsService` (fully implemented, provided for you) composes effects on top of the main cart service. There is nothing to implement here — read it to see real-world effect patterns.
 
 **Architecture Note**: The CartEffectsService consumes data from CartComputedService and adds wishlist, recently viewed, and history functionality on top.
 

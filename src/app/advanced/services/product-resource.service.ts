@@ -22,11 +22,28 @@ export class ProductResourceService {
   private itemsPerPage = signal<number>(12);
   private currentPage = signal<number>(1);
 
-  // TODO: Implement resource for products with advanced filtering
+  // TODO: Make this resource REACTIVE — right now it loads ONCE and ignores
+  // every filter change!
+  //
+  // THE BUG: signals read inside an async loader are NOT tracked. Typing in
+  // the search box updates searchQuery(), but the resource never re-runs.
+  //
+  // YOUR WORK (the loader logic below is provided — reactivity is the lesson):
+  // 1. Add a `params` function that reads ALL the filter signals:
+  //    params: () => ({ search: this.searchQuery(), category: ..., ... })
+  //    `params` is the ONLY reactive part of a resource — any signal read
+  //    there re-triggers the loader when it changes.
+  // 2. Change the loader signature to `async ({ params }) =>` and replace
+  //    the `this.someSignal()` reads below with `params.someValue`.
+  // 3. BONUS: also destructure `abortSignal` and make the delay below
+  //    cancellable, so rapid filter changes abort the stale load.
+  //
+  // LEARNING: resource() = reactive params + async loader + value/isLoading/
+  // error signals. The template already consumes them (see the component).
   public readonly productsResource = resource({
     loader: async () => {
       try {
-        // Get current filter values
+        // These reads are NOT tracked here — move them into params (TODO #1)
         const search = this.searchQuery();
         const category = this.categoryFilter();
         const priceRange = this.priceRange();
@@ -34,8 +51,7 @@ export class ProductResourceService {
         const sortOrder = this.sortOrder();
         const page = this.currentPage();
         const limit = this.itemsPerPage();
-        
-        // TODO: Simulate API call with filtering and pagination
+
         const response = await firstValueFrom(this.http.get<Product[]>('api/products'));
         let products = response || [];
 
@@ -110,9 +126,11 @@ export class ProductResourceService {
     }
   });
 
-  // TODO: Implement resource for single product
+  // TODO: Same exercise — selecting a product should load its details.
+  // Add `params: () => ({ id: this.selectedProductId() })` and read the id
+  // from `params` in the loader instead of calling the signal here.
   private selectedProductId = signal<string | null>(null);
-  
+
   public readonly selectedProductResource = resource({
     loader: async () => {
       const id = this.selectedProductId();
@@ -134,7 +152,8 @@ export class ProductResourceService {
     }
   });
 
-  // TODO: Implement resource for product recommendations
+  // TODO: Same exercise — recommendations depend on the selected product AND
+  // the category filter. Move both signal reads into a `params` function.
   public readonly recommendationsResource = resource({
     loader: async () => {
       try {

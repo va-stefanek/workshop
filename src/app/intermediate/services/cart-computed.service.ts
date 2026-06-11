@@ -5,7 +5,7 @@ import { CartItem, CartSummary, Product } from '../../shared/models';
   providedIn: 'root'
 })
 export class CartComputedService {
-  
+
   // TODO: Create private writable signals for cart state
   // HINT: Use signal<CartItem[]>([]) for items
   // HINT: Use signal<string>('all') for selectedCategory
@@ -184,7 +184,6 @@ export class CartComputedService {
   constructor() {
     // TODO: Load cart from localStorage
     // HINT: Call loadCartFromStorage() method
-    this.loadCartFromStorage();
 
     // TODO: Effect for auto-saving cart
     // REQUIREMENTS:
@@ -197,12 +196,7 @@ export class CartComputedService {
     // - No manual subscription management needed
     //
     // SYNTAX HINT:
-    // effect(() => {
-    //   this.saveCartToStorage();
-    // });
-    effect(() => {
-      this.saveCartToStorage();
-    });
+    // effect(() => { /* read a signal, perform the side effect */ });
 
     // TODO: Effect for logging cart changes
     // REQUIREMENTS:
@@ -214,20 +208,6 @@ export class CartComputedService {
     // - Use if statements inside effects
     // - Can depend on multiple computed signals
     // - Automatically batched for efficiency
-    //
-    // SYNTAX HINT:
-    // effect(() => {
-    //   const summary = this.cartSummary();
-    //   if (summary.totalItems > 0) {
-    //     console.log('Cart updated:', { ... });
-    //   }
-    // });
-    effect(() => {
-      const summary = this.cartSummary();
-      if (summary.totalItems > 0) {
-        console.log('Cart updated - TODO: Implement proper logging');
-      }
-    });
   }
 
   // TODO: Implement basic cart operations using signals

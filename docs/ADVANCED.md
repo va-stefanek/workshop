@@ -22,8 +22,8 @@ By completing this level, you will:
 - `src/app/advanced/components/cart-advanced.component.ts` - Feature-rich UI
 
 **Supporting Files:**
-- `src/app/advanced/components/product-search.component.ts` - Advanced search component
-- `src/app/advanced/services/product-resource.solution.ts` - **SOLUTION** (reference)
+- `src/app/advanced/components/cart-advanced.component.html` - template consuming the resources
+- Full solution: branch `workshop-complete` (`git switch workshop-complete`)
 
 ## 🏗 Architecture Overview
 
@@ -73,12 +73,14 @@ The Resource API provides a declarative way to manage async data:
 // Traditional approach
 private products$ = this.http.get<Product[]>('/api/products');
 
-// Resource API approach
-public readonly productsResource = resource<Product[], { search: string }>({
-  request: () => ({ search: this.searchQuery() }),
-  loader: async ({ request }) => {
-    const response = await this.http.get<Product[]>(`/api/products?search=${request.search}`).toPromise();
-    return response || [];
+// Resource API approach (Angular 22: the reactive function is called `params`)
+public readonly productsResource = resource({
+  // params is REACTIVE: whenever a signal read here changes, the loader re-runs
+  params: () => ({ search: this.searchQuery() }),
+  // the loader receives the current params value (and an abortSignal)
+  loader: async ({ params }) => {
+    const products = await firstValueFrom(this.http.get<Product[]>('api/products'));
+    return products.filter(p => p.name.includes(params.search));
   }
 });
 ```
@@ -92,52 +94,34 @@ public readonly productsResource = resource<Product[], { search: string }>({
 
 ## 📝 Implementation Tasks
 
-### Task 1: Implement Advanced Product Resource
+### Task 1: Make the Products Resource Reactive
 
-**Goal**: Create a sophisticated product fetching system with filtering, pagination, and caching.
+**Goal**: The starter file already contains the full loader (filtering, sorting, pagination — that's not the lesson here). What it does NOT have is reactivity: the resource loads ONCE and ignores every filter change, because signals read inside an async loader are NOT tracked. Your job is to wire up the `params` function.
 
-**Core Resource Structure**:
+**The bug you are fixing**: open the app, type in the search box — nothing reloads. `setSearchQuery()` updates a signal, but the resource never notices.
+
+**Your work**:
 ```typescript
-export class ProductResourceService {
-  private searchQuery = signal<string>('');
-  private categoryFilter = signal<string>('all');
-  private priceRange = signal<{ min: number; max: number }>({ min: 0, max: 5000 });
-  private sortBy = signal<'name' | 'price' | 'rating'>('name');
-  private sortOrder = signal<'asc' | 'desc'>('asc');
-  private currentPage = signal<number>(1);
-  private itemsPerPage = signal<number>(12);
+public readonly productsResource = resource({
+  // TODO 1: Add a params function that reads ALL the filter signals:
+  // search, category, priceRange, sortBy, sortOrder, page, limit.
+  // params is the ONLY reactive part of a resource — any signal read
+  // here re-triggers the loader when it changes.
+  params: () => ({ /* ... */ }),
 
-  // TODO: Implement main products resource
-  public readonly productsResource = resource<ProductsResource, FiltersRequest>({
-    request: () => ({
-      search: this.searchQuery(),
-      category: this.categoryFilter(),
-      minPrice: this.priceRange().min,
-      maxPrice: this.priceRange().max,
-      sortBy: this.sortBy(),
-      sortOrder: this.sortOrder(),
-      page: this.currentPage(),
-      limit: this.itemsPerPage()
-    }),
-    loader: async ({ request }) => {
-      // TODO: Implement advanced filtering logic
-      // - Search by name, description, and tags
-      // - Filter by category and price range
-      // - Apply sorting (name, price, rating)
-      // - Handle pagination
-      // - Simulate network delay
-      // - Handle errors gracefully
-    }
-  });
-}
+  // TODO 2: Change the loader signature to receive { params } and
+  // replace every `this.someSignal()` read inside the loader with
+  // the corresponding `params.someValue`.
+  loader: async ({ params }) => {
+    // existing filtering/sorting/pagination logic stays — just feed it params
+  }
+});
 ```
 
 **Requirements**:
-- Support complex filtering combinations
-- Implement client-side pagination
-- Add realistic network delay simulation (500ms)
-- Handle empty results gracefully
-- Implement error recovery with retry logic
+- Typing in search, changing category/price/sort/page must each reload the resource
+- No signal reads left inside the loader body
+- Bonus: the loader also receives `abortSignal` — pass it to your delay helper so a rapid filter change cancels the previous load
 
 ### Task 2: Implement Selected Product Resource
 
@@ -147,29 +131,23 @@ export class ProductResourceService {
 ```typescript
 private selectedProductId = signal<string | null>(null);
 
-public readonly selectedProductResource = resource<Product | null, { id: string | null }>({
-  request: () => ({ id: this.selectedProductId() }),
-  loader: async ({ request }) => {
-    if (!request.id) return null;
-    
-    // TODO: Load single product by ID
-    // - Find product in mock data
-    // - Simulate API delay
-    // - Handle not found cases
+public readonly selectedProductResource = resource({
+  // TODO: same exercise as Task 1 — selecting a product should load it
+  params: () => ({ id: this.selectedProductId() }),
+  loader: async ({ params }) => {
+    if (!params.id) return null;
+    // existing lookup logic stays — read the id from params
   }
 });
 
-public readonly recommendationsResource = resource<Product[], RecommendationRequest>({
-  request: () => ({
+public readonly recommendationsResource = resource({
+  // TODO: recommendations depend on the selected product AND the category
+  params: () => ({
     basedOnProductId: this.selectedProductId(),
     category: this.categoryFilter()
   }),
-  loader: async ({ request }) => {
-    // TODO: Generate intelligent product recommendations
-    // - Based on selected product (same category, similar tags)
-    // - Based on current category filter
-    // - Sort by rating
-    // - Return top 5 recommendations
+  loader: async ({ params }) => {
+    // existing recommendation logic stays — read inputs from params
   }
 });
 ```
@@ -209,9 +187,9 @@ export class AdvancedCartService {
   });
 
   // TODO: Implement cart sync resource
-  public readonly cartSyncResource = resource<SyncResult, { cartData: CartState }>({
-    request: () => ({ cartData: this.cartState() }),
-    loader: async ({ request }) => {
+  public readonly cartSyncResource = resource({
+    params: () => ({ cartData: this.cartState() }),
+    loader: async ({ params }) => {
       // TODO: Simulate server synchronization
       // - API delay simulation
       // - Occasional sync failures (10%)
@@ -369,96 +347,33 @@ export class CartAdvancedComponent {
 
 ## 🧪 Code Examples
 
-### Advanced Resource with Error Handling
+### Resource Anatomy — the pattern (not the solution)
 
 ```typescript
-public readonly productsResource = resource<ProductsResource, FiltersRequest>({
-  request: () => ({
+public readonly productsResource = resource({
+  // 1. REACTIVE INPUTS — the only tracked part of a resource
+  params: () => ({
     search: this.searchQuery(),
     category: this.categoryFilter(),
-    minPrice: this.priceRange().min,
-    maxPrice: this.priceRange().max,
-    sortBy: this.sortBy(),
-    sortOrder: this.sortOrder(),
-    page: this.currentPage(),
-    limit: this.itemsPerPage()
+    // ...all the signals the load depends on
   }),
-  loader: async ({ request }) => {
+
+  // 2. ASYNC WORK — re-runs whenever params changes;
+  //    receives the params VALUE plus an abortSignal
+  loader: async ({ params, abortSignal }) => {
     try {
-      // Simulate API call with filtering
-      const response = await this.http.get<Product[]>('/assets/data/products.json').toPromise();
-      let products = response || [];
-
-      // Apply complex filtering
-      if (request.search?.trim()) {
-        const searchLower = request.search.toLowerCase();
-        products = products.filter(p => 
-          p.name.toLowerCase().includes(searchLower) ||
-          p.description.toLowerCase().includes(searchLower) ||
-          p.tags?.some(tag => tag.toLowerCase().includes(searchLower))
-        );
-      }
-
-      if (request.category && request.category !== 'all') {
-        products = products.filter(p => p.category === request.category);
-      }
-
-      if (request.minPrice !== undefined && request.maxPrice !== undefined) {
-        products = products.filter(p => 
-          p.price >= request.minPrice! && p.price <= request.maxPrice!
-        );
-      }
-
-      // Apply sorting
-      products.sort((a, b) => {
-        let aValue: any, bValue: any;
-        
-        switch (request.sortBy) {
-          case 'price':
-            aValue = a.price;
-            bValue = b.price;
-            break;
-          case 'rating':
-            aValue = a.rating;
-            bValue = b.rating;
-            break;
-          default:
-            aValue = a.name.toLowerCase();
-            bValue = b.name.toLowerCase();
-        }
-
-        const comparison = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
-        return request.sortOrder === 'desc' ? -comparison : comparison;
-      });
-
-      // Apply pagination
-      const startIndex = ((request.page || 1) - 1) * (request.limit || 12);
-      const endIndex = startIndex + (request.limit || 12);
-      const paginatedProducts = products.slice(startIndex, endIndex);
-
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      return {
-        products: paginatedProducts,
-        loading: false,
-        error: null,
-        totalCount: products.length,
-        hasMore: endIndex < products.length
-      };
-    } catch (error) {
-      console.error('Error loading products:', error);
-      return {
-        products: [],
-        loading: false,
-        error: 'Failed to load products. Please try again.',
-        totalCount: 0,
-        hasMore: false
-      };
+      const products = await firstValueFrom(this.http.get<Product[]>('api/products'));
+      // filter / sort / paginate based on params...
+      return { products, loading: false, error: null };
+    } catch {
+      // 3. ERROR SHAPE — return a value the template can render
+      return { products: [], loading: false, error: 'Failed to load products.' };
     }
   }
 });
 ```
+
+The full implementation lives on the `workshop-complete` branch — try yours first.
 
 ### Advanced Analytics Implementation
 
@@ -566,10 +481,10 @@ importCart(cartData: string): boolean {
 
 ### Resource API Optimizations
 
-1. **Intelligent Caching**: Resources automatically cache results based on request parameters
-2. **Request Deduplication**: Multiple components requesting the same data share results
-3. **Fine-grained Updates**: Only affected UI components re-render when data changes
-4. **Memory Management**: Automatic cleanup when components are destroyed
+1. **Automatic Cancellation**: a new params value aborts the in-flight load (use the `abortSignal`)
+2. **Single Source of Truth**: every component reading the resource shares one load and one value
+3. **Fine-grained Updates**: only consumers of `value()` / `isLoading()` / `error()` re-render
+4. **Memory Management**: automatic cleanup when the owning injector is destroyed
 
 ### Signal Performance Benefits
 
@@ -634,8 +549,8 @@ You've successfully completed the Advanced Level when:
 
 **Resource API Best Practices**:
 - Implement proper error boundaries
-- Use request deduplication for performance
-- Cache frequently accessed data
+- Keep `params` cheap — it runs on every signal change
+- Return renderable error values instead of throwing from loaders
 - Handle loading and error states gracefully
 
 **Signal Optimization**:

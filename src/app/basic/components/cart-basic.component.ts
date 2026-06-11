@@ -3,7 +3,7 @@
 // import { Observable, Subscription } from 'rxjs';
 // import { ProductService } from '../../shared/services/product.service';
 // import { CartItem, CartSummary, Product } from '../../shared/models';
-// import {CartRxjsService} from '../services/shopping-cart-rxjs.service';
+// import {ShoppingCartRxjsService} from '../services/shopping-cart-rxjs.service';
 //
 // @Component({
 //   selector: 'app-cart-basic',
@@ -22,7 +22,7 @@
 //   private subscription = new Subscription();
 //
 //   // Inject services using modern approach
-//   private cartService = inject(CartRxjsService);
+//   private cartService = inject(ShoppingCartRxjsService);
 //   private productService = inject(ProductService);
 //
 //   constructor() {
