@@ -42,6 +42,11 @@ export const routes: Routes = [
     title: 'Modern DI - inject() Patterns and Advanced Providers'
   },
   {
+    path: 'webmcp',
+    loadChildren: () => import('./webmcp/webmcp.routes').then(m => m.WEBMCP_ROUTES),
+    title: 'WebMCP - AI Agent Tools (Experimental)'
+  },
+  {
     path: '**',
     redirectTo: '/basic'
   }

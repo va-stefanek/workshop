@@ -54,6 +54,13 @@ export class App {
       description: 'inject() Patterns',
       difficulty: 'Advanced',
       topics: ['inject()', 'Provider Functions', 'Testing', 'Composition']
+    },
+    {
+      path: '/webmcp',
+      name: 'WebMCP',
+      description: 'AI Agent Tools (Experimental)',
+      difficulty: 'Advanced',
+      topics: ['WebMCP', 'Tools', 'inputSchema', 'Signal Forms']
     }
   ];
 }

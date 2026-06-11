@@ -2,8 +2,10 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChang
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
+import { provideExperimentalWebMcpForms } from '@angular/forms/signals';
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './shared/services/in-memory-data.service';
+import { SHOPPING_AGENT_TOOL_PROVIDERS } from './webmcp/shopping-agent-tools';
 
 import { routes } from './app.routes';
 
@@ -27,6 +29,10 @@ export const appConfig: ApplicationConfig = {
         passThruUnknownUrl: true,
         apiBase: 'api/'
       })
-    )
+    ),
+    // WebMCP (experimental): expose app functionality as AI agent tools
+    ...SHOPPING_AGENT_TOOL_PROVIDERS,
+    // Required for forms using the experimentalWebMcpTool option
+    provideExperimentalWebMcpForms()
   ]
 };
