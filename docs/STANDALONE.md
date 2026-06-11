@@ -18,13 +18,21 @@ By completing this module, you will:
 
 **Primary Files:**
 - `src/app/standalone/components/standalone-cart.component.ts` - **STARTER FILE** (main workspace)
-- `src/app/standalone/components/standalone-product-list.component.ts` - Product catalog component
-- `src/app/standalone/components/standalone-checkout.component.ts` - Checkout flow component
+- `src/app/standalone/components/standalone-product-list.component.ts` - product catalog (bare stub — you build it in Task 3)
+- `src/app/standalone/components/standalone-checkout.component.ts` - checkout flow (bare stub — you build it in Task 6)
 
 **Supporting Files:**
 - `src/app/standalone/services/standalone-cart.service.ts` - Cart service for standalone architecture
 - `src/app/standalone/standalone.routes.ts` - Route definitions for standalone features
-- `src/app/standalone/shared/` - Shared standalone components and utilities
+- `src/app/standalone/components/migration-demo.component.ts` - reference walkthrough used in Task 7
+
+> ℹ️ The product-list / checkout / product-detail components are intentionally
+> near-empty shells (~25 lines). The task descriptions below are the spec —
+> you build the features from scratch inside those files.
+>
+> ℹ️ The templates in this module still use `*ngIf`/`*ngFor` on purpose: as you
+> implement each section, also convert it to `@if`/`@for`/`@switch` — the same
+> migration you practiced in the Control Flow module.
 
 ## 🏗 Architecture Overview
 
@@ -456,6 +464,8 @@ export class StandaloneCheckoutComponent {
 ### Task 7: Progressive Migration Strategy
 
 **Goal**: Demonstrate migration from NgModule-based to standalone architecture.
+
+**Reference**: open `src/app/standalone/components/migration-demo.component.ts` — it walks through the before/after of each migration step; use it as the model for this task.
 
 **Migration Steps**:
 ```typescript
