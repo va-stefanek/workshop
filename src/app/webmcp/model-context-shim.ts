@@ -83,9 +83,43 @@ export function installModelContextShim(): void {
       registerTool: (tool, options) => track(tool, options, 'shim'),
     };
   }
+
+  installDemoHandle();
 }
 
 /** Whether the browser provided its own WebMCP implementation. */
 export function hasNativeWebMcp(): boolean {
   return nativeSupport;
+}
+
+/**
+ * Demo handle for EXTERNAL agents (and the DevTools console).
+ *
+ * Native WebMCP exposes registered tools only to the browser's own agent —
+ * page scripts cannot enumerate or call them. For the workshop we publish
+ * `window.webmcpDemo` so any agent that can run JavaScript on the page
+ * (Claude Code via chrome-devtools MCP, Playwright, the DevTools console)
+ * can do exactly what a native agent does:
+ *
+ *   webmcpDemo.listTools()
+ *   await webmcpDemo.callTool('searchCatalog', { query: 'laptop' })
+ */
+function installDemoHandle(): void {
+  (globalThis as Record<string, unknown>)['webmcpDemo'] = {
+    listTools: () =>
+      registry().map(t => ({
+        name: t.name,
+        description: t.description,
+        inputSchema: t.inputSchema,
+        source: t.source,
+      })),
+    callTool: async (name: string, args: unknown = {}) => {
+      const tool = registry().find(t => t.name === name);
+      if (!tool) {
+        const available = registry().map(t => t.name).join(', ');
+        return `Unknown tool "${name}". Available tools: ${available}`;
+      }
+      return await tool.execute(args, { signal: new AbortController().signal });
+    },
+  };
 }
