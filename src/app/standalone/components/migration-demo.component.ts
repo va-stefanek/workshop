@@ -20,12 +20,12 @@ interface MigrationStep {
       <header class="migration-header">
         <h1>NgModule to Standalone Migration</h1>
         <p>Step-by-step guide to migrate from NgModules to standalone components</p>
-        
+    
         <nav class="back-nav">
           <a routerLink="/standalone" class="back-btn">← Back to Standalone Cart</a>
         </nav>
       </header>
-
+    
       <div class="migration-overview">
         <h2>Migration Strategy</h2>
         <div class="strategy-grid">
@@ -47,60 +47,62 @@ interface MigrationStep {
           </div>
         </div>
       </div>
-
+    
       <div class="migration-steps">
         <h2>Migration Steps</h2>
-        
+    
         <!-- TODO: Convert to @for -->
-        <div *ngFor="let step of migrationSteps(); let i = index" class="step-card">
-          <div class="step-header">
-            <div class="step-number">{{ i + 1 }}</div>
-            <div class="step-info">
-              <h3>{{ step.title }}</h3>
-              <p>{{ step.description }}</p>
-            </div>
-            <div class="step-status" [class]="'status-' + step.status">
-              {{ step.status | titlecase }}
-            </div>
-          </div>
-
-          <div class="step-content">
-            <div class="code-comparison">
-              <div class="code-before">
-                <h4>Before (NgModule)</h4>
-                <pre><code>{{ step.before }}</code></pre>
+        @for (step of migrationSteps(); track step; let i = $index) {
+          <div class="step-card">
+            <div class="step-header">
+              <div class="step-number">{{ i + 1 }}</div>
+              <div class="step-info">
+                <h3>{{ step.title }}</h3>
+                <p>{{ step.description }}</p>
               </div>
-              
-              <div class="migration-arrow">→</div>
-              
-              <div class="code-after">
-                <h4>After (Standalone)</h4>
-                <pre><code>{{ step.after }}</code></pre>
+              <div class="step-status" [class]="'status-' + step.status">
+                {{ step.status | titlecase }}
               </div>
             </div>
-
-            <!-- TODO: Convert to @if -->
-            <div *ngIf="step.benefits.length > 0" class="step-benefits">
-              <h4>Benefits:</h4>
-              <ul>
-                <!-- TODO: Convert to @for -->
-                <li *ngFor="let benefit of step.benefits">{{ benefit }}</li>
-              </ul>
+            <div class="step-content">
+              <div class="code-comparison">
+                <div class="code-before">
+                  <h4>Before (NgModule)</h4>
+                  <pre><code>{{ step.before }}</code></pre>
+                </div>
+                <div class="migration-arrow">→</div>
+                <div class="code-after">
+                  <h4>After (Standalone)</h4>
+                  <pre><code>{{ step.after }}</code></pre>
+                </div>
+              </div>
+              <!-- TODO: Convert to @if -->
+              @if (step.benefits.length > 0) {
+                <div class="step-benefits">
+                  <h4>Benefits:</h4>
+                  <ul>
+                    <!-- TODO: Convert to @for -->
+                    @for (benefit of step.benefits; track benefit) {
+                      <li>{{ benefit }}</li>
+                    }
+                  </ul>
+                </div>
+              }
             </div>
           </div>
-        </div>
+        }
       </div>
-
+    
       <div class="migration-tools">
         <h2>Migration Tools & Automation</h2>
-        
+    
         <div class="tools-grid">
           <div class="tool-card">
             <h3>🛠 Angular CLI Schematics</h3>
             <p>Automated migration tools (coming in future Angular versions)</p>
             <pre><code>ng generate &#64;angular/core:standalone</code></pre>
           </div>
-          
+    
           <div class="tool-card">
             <h3>📊 Dependency Analyzer</h3>
             <p>Analyze component dependencies before migration</p>
@@ -108,7 +110,7 @@ interface MigrationStep {
               Analyze Dependencies
             </button>
           </div>
-          
+    
           <div class="tool-card">
             <h3>✅ Migration Validator</h3>
             <p>Validate migration results and catch issues</p>
@@ -116,7 +118,7 @@ interface MigrationStep {
               Validate Migration
             </button>
           </div>
-          
+    
           <div class="tool-card">
             <h3>📈 Performance Metrics</h3>
             <p>Compare before/after performance metrics</p>
@@ -126,104 +128,110 @@ interface MigrationStep {
           </div>
         </div>
       </div>
-
+    
       <!-- TODO: Convert to @if -->
-      <div *ngIf="showAnalysis()" class="analysis-results">
-        <h2>Dependency Analysis Results</h2>
-        <div class="analysis-content">
-          <div class="analysis-item">
-            <h3>Components Ready for Migration</h3>
-            <ul>
-              <li>SimpleButtonComponent (no dependencies)</li>
-              <li>IconComponent (no dependencies)</li>
-              <li>LoadingSpinnerComponent (CommonModule only)</li>
-            </ul>
-          </div>
-          
-          <div class="analysis-item">
-            <h3>Components Requiring Preparation</h3>
-            <ul>
-              <li>ComplexFormComponent (depends on SimpleButtonComponent)</li>
-              <li>DataTableComponent (depends on multiple shared components)</li>
-            </ul>
-          </div>
-          
-          <div class="analysis-item">
-            <h3>Potential Issues</h3>
-            <ul>
-              <li>Circular dependencies between FeatureAComponent and FeatureBComponent</li>
-              <li>Shared services need provider configuration review</li>
-            </ul>
+      @if (showAnalysis()) {
+        <div class="analysis-results">
+          <h2>Dependency Analysis Results</h2>
+          <div class="analysis-content">
+            <div class="analysis-item">
+              <h3>Components Ready for Migration</h3>
+              <ul>
+                <li>SimpleButtonComponent (no dependencies)</li>
+                <li>IconComponent (no dependencies)</li>
+                <li>LoadingSpinnerComponent (CommonModule only)</li>
+              </ul>
+            </div>
+            <div class="analysis-item">
+              <h3>Components Requiring Preparation</h3>
+              <ul>
+                <li>ComplexFormComponent (depends on SimpleButtonComponent)</li>
+                <li>DataTableComponent (depends on multiple shared components)</li>
+              </ul>
+            </div>
+            <div class="analysis-item">
+              <h3>Potential Issues</h3>
+              <ul>
+                <li>Circular dependencies between FeatureAComponent and FeatureBComponent</li>
+                <li>Shared services need provider configuration review</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-
+      }
+    
       <div class="migration-checklist">
         <h2>Migration Checklist</h2>
-        
+    
         <div class="checklist-section">
           <h3>Pre-Migration</h3>
           <div class="checklist-items">
             <!-- TODO: Convert to @for -->
-            <label *ngFor="let item of preMigrationChecklist()" class="checklist-item">
-              <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('pre', item.id)">
-              <span>{{ item.text }}</span>
-            </label>
+            @for (item of preMigrationChecklist(); track item) {
+              <label class="checklist-item">
+                <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('pre', item.id)">
+                <span>{{ item.text }}</span>
+              </label>
+            }
           </div>
         </div>
-        
+    
         <div class="checklist-section">
           <h3>During Migration</h3>
           <div class="checklist-items">
             <!-- TODO: Convert to @for -->
-            <label *ngFor="let item of duringMigrationChecklist()" class="checklist-item">
-              <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('during', item.id)">
-              <span>{{ item.text }}</span>
-            </label>
+            @for (item of duringMigrationChecklist(); track item) {
+              <label class="checklist-item">
+                <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('during', item.id)">
+                <span>{{ item.text }}</span>
+              </label>
+            }
           </div>
         </div>
-        
+    
         <div class="checklist-section">
           <h3>Post-Migration</h3>
           <div class="checklist-items">
             <!-- TODO: Convert to @for -->
-            <label *ngFor="let item of postMigrationChecklist()" class="checklist-item">
-              <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('post', item.id)">
-              <span>{{ item.text }}</span>
-            </label>
+            @for (item of postMigrationChecklist(); track item) {
+              <label class="checklist-item">
+                <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('post', item.id)">
+                <span>{{ item.text }}</span>
+              </label>
+            }
           </div>
         </div>
       </div>
-
+    
       <div class="best-practices">
         <h2>Best Practices & Tips</h2>
-        
+    
         <div class="practices-grid">
           <div class="practice-card">
             <h3>🎯 Start Small</h3>
             <p>Begin with simple, leaf components that have minimal dependencies</p>
           </div>
-          
+    
           <div class="practice-card">
             <h3>🔍 Document Dependencies</h3>
             <p>Create a dependency map before starting migration</p>
           </div>
-          
+    
           <div class="practice-card">
             <h3>🧪 Test Thoroughly</h3>
             <p>Run full test suite after each component conversion</p>
           </div>
-          
+    
           <div class="practice-card">
             <h3>📦 Bundle Analysis</h3>
             <p>Monitor bundle size changes throughout migration</p>
           </div>
-          
+    
           <div class="practice-card">
             <h3>🚀 Modern Patterns</h3>
             <p>Use migration as opportunity to adopt inject() and new control flow</p>
           </div>
-          
+    
           <div class="practice-card">
             <h3>👥 Team Coordination</h3>
             <p>Coordinate with team to avoid merge conflicts</p>
@@ -231,7 +239,7 @@ interface MigrationStep {
         </div>
       </div>
     </div>
-  `,
+    `,
   styleUrls: ['./migration-demo.component.css']
 })
 export class MigrationDemoComponent {

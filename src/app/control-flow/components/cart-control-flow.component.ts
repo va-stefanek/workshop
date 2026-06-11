@@ -30,132 +30,144 @@ import { CartItem } from '../../shared/models/cart-item.model';
         <h1>Control Flow - Modern Template Syntax</h1>
         <p>Learn &#64;if, &#64;for, &#64;switch, and &#64;defer patterns</p>
       </header>
-
+    
       <!-- TODO: Convert these structural directives to new control flow -->
-      <!-- 
+      <!--
       Current implementation uses old syntax - convert to:
-      &#64;if, &#64;for, &#64;switch, &#64;defer 
+      &#64;if, &#64;for, &#64;switch, &#64;defer
       -->
-
+    
       <!-- Filter Controls using @switch -->
       <div class="filter-section">
         <h2>Filter Controls</h2>
-        
+    
         <!-- TODO: Convert ngSwitch to &#64;switch -->
-        <div [ngSwitch]="activeFilterType()">
-          <div *ngSwitchCase="'category'">
-            <h3>Filter by Category</h3>
-            <!-- TODO: Convert ngFor to &#64;for -->
-            <button *ngFor="let category of availableCategories(); trackBy: trackByCategory"
+        <div>
+          @switch (activeFilterType()) {
+            @case ('category') {
+              <div>
+                <h3>Filter by Category</h3>
+                <!-- TODO: Convert ngFor to &#64;for -->
+                @for (category of availableCategories(); track trackByCategory($index, category)) {
+                  <button
                     [class.active]="selectedCategory() === category"
                     (click)="setCategory(category)">
-              {{ category }}
-            </button>
-          </div>
-          
-          <div *ngSwitchCase="'price'">
-            <h3>Filter by Price Range</h3>
-            <input type="range" 
-                   [value]="priceRange().max" 
-                   min="0" 
-                   max="1000"
-                   (input)="updatePriceRange($event)">
-            <span>Up to {{ priceRange().max | currency }}</span>
-          </div>
-          
-          <div *ngSwitchDefault>
-            <h3>Select Filter Type</h3>
-            <button (click)="setFilterType('category')">Category</button>
-            <button (click)="setFilterType('price')">Price</button>
-          </div>
+                    {{ category }}
+                  </button>
+                }
+              </div>
+            }
+            @case ('price') {
+              <div>
+                <h3>Filter by Price Range</h3>
+                <input type="range"
+                  [value]="priceRange().max"
+                  min="0"
+                  max="1000"
+                  (input)="updatePriceRange($event)">
+                <span>Up to {{ priceRange().max | currency }}</span>
+              </div>
+            }
+            @default {
+              <div>
+                <h3>Select Filter Type</h3>
+                <button (click)="setFilterType('category')">Category</button>
+                <button (click)="setFilterType('price')">Price</button>
+              </div>
+            }
+          }
         </div>
       </div>
-
+    
       <!-- Cart Status using &#64;if -->
       <div class="cart-status">
         <!-- TODO: Convert ngIf to &#64;if -->
-        <div *ngIf="cartService.cartItems().length > 0; else emptyCart">
-          <h2>Shopping Cart ({{ cartService.totalItems() }} items)</h2>
-          
-          <!-- Cart Items using &#64;for -->
-          <div class="cart-items">
-            <!-- TODO: Convert ngFor to &#64;for with proper tracking -->
-            <div *ngFor="let item of cartService.cartItems(); trackBy: trackByItemId" 
-                 class="cart-item">
-              <h4>{{ item.name }}</h4>
-              <span>{{ item.price | currency }}</span>
-              
-              <!-- Conditional content using &#64;if -->
-              <!-- TODO: Convert ngIf to &#64;if -->
-              <div *ngIf="item.discount && item.discount > 0" class="discount-badge">
-                {{ item.discount }}% OFF
-              </div>
-              
-              <div class="quantity-controls">
-                <!-- TODO: Convert ngIf to &#64;if -->
-                <button *ngIf="item.quantity > 1; else removeButton"
-                        (click)="decreaseQuantity(item.id)">-</button>
-                
-                <ng-template #removeButton>
-                  <button (click)="removeItem(item.id)" class="remove">Remove</button>
-                </ng-template>
-                
-                <span>{{ item.quantity }}</span>
-                <button (click)="increaseQuantity(item.id)">+</button>
-              </div>
+        @if (cartService.cartItems().length > 0) {
+          <div>
+            <h2>Shopping Cart ({{ cartService.totalItems() }} items)</h2>
+            <!-- Cart Items using &#64;for -->
+            <div class="cart-items">
+              <!-- TODO: Convert ngFor to &#64;for with proper tracking -->
+              @for (item of cartService.cartItems(); track trackByItemId($index, item)) {
+                <div
+                  class="cart-item">
+                  <h4>{{ item.name }}</h4>
+                  <span>{{ item.price | currency }}</span>
+                  <!-- Conditional content using &#64;if -->
+                  <!-- TODO: Convert ngIf to &#64;if -->
+                  @if (item.discount && item.discount > 0) {
+                    <div class="discount-badge">
+                      {{ item.discount }}% OFF
+                    </div>
+                  }
+                  <div class="quantity-controls">
+                    <!-- TODO: Convert ngIf to &#64;if -->
+                    @if (item.quantity > 1) {
+                      <button
+                      (click)="decreaseQuantity(item.id)">-</button>
+                    } @else {
+                      <button (click)="removeItem(item.id)" class="remove">Remove</button>
+                    }
+                    <span>{{ item.quantity }}</span>
+                    <button (click)="increaseQuantity(item.id)">+</button>
+                  </div>
+                </div>
+              }
             </div>
           </div>
-        </div>
-        
-        <ng-template #emptyCart>
+        } @else {
           <div class="empty-cart">
             <h3>Your cart is empty</h3>
             <p>Add some products to get started!</p>
           </div>
-        </ng-template>
+        }
+    
       </div>
-
+    
       <!-- Product List with &#64;defer -->
       <div class="product-section">
         <h2>Available Products</h2>
-        
+    
         <!-- TODO: Implement &#64;defer for heavy product list -->
         <!-- Current: Loads immediately -->
-        <div class="product-grid" *ngIf="!isLoading(); else loadingTemplate">
-          <div *ngFor="let product of filteredProducts(); trackBy: trackByProductId" 
-               class="product-item">
-            <!-- TODO: Replace with product-card component when created -->
-            <div class="placeholder-product-card">
-              <h4>{{ product.name }}</h4>
-              <p>{{ product.price | currency }}</p>
-              <p>{{ product.description }}</p>
-              <div class="actions">
-                <button 
-                  *ngIf="!isProductInCart(product.id); else removeBtn"
-                  (click)="addToCart(product)"
-                  class="add-btn">
-                  Add to Cart
-                </button>
-                <ng-template #removeBtn>
-                  <button 
-                    (click)="removeFromCart(product.id)"
-                    class="remove-btn">
-                    Remove from Cart
-                  </button>
-                </ng-template>
+        @if (!isLoading()) {
+          <div class="product-grid">
+            @for (product of filteredProducts(); track trackByProductId($index, product)) {
+              <div
+                class="product-item">
+                <!-- TODO: Replace with product-card component when created -->
+                <div class="placeholder-product-card">
+                  <h4>{{ product.name }}</h4>
+                  <p>{{ product.price | currency }}</p>
+                  <p>{{ product.description }}</p>
+                  <div class="actions">
+                    @if (!isProductInCart(product.id)) {
+                      <button
+                        (click)="addToCart(product)"
+                        class="add-btn">
+                        Add to Cart
+                      </button>
+                    } @else {
+                      <button
+                        (click)="removeFromCart(product.id)"
+                        class="remove-btn">
+                        Remove from Cart
+                      </button>
+                    }
+                  </div>
+                </div>
               </div>
-            </div>
+            }
           </div>
-        </div>
-        
-        <ng-template #loadingTemplate>
+        } @else {
           <!-- TODO: Replace with loading-skeleton component when created -->
           <div class="placeholder-loading">
             <p>Loading products...</p>
           </div>
-        </ng-template>
+        }
+    
       </div>
-
+    
       <!-- TODO: Add &#64;defer examples for heavy components -->
       <!-- Performance Analytics (should be deferred) -->
       <div class="analytics-section">
@@ -166,7 +178,7 @@ import { CartItem } from '../../shared/models/cart-item.model';
           <!-- Heavy analytics component should go here -->
         </div>
       </div>
-
+    
       <!-- TODO: Add &#64;defer examples with different triggers -->
       <!-- Recommendations (should be deferred with interaction trigger) -->
       <div class="recommendations-section">
@@ -177,23 +189,25 @@ import { CartItem } from '../../shared/models/cart-item.model';
           <!-- Heavy recommendations component should go here -->
         </div>
       </div>
-
+    
       <!-- Development Tools -->
       <div class="dev-tools">
         <h3>Development Tools</h3>
         <button (click)="togglePerformanceMetrics()">
           {{ showPerformanceMetrics() ? 'Hide' : 'Show' }} Performance Metrics
         </button>
-        
+    
         <!-- TODO: Convert ngIf to &#64;if -->
-        <div *ngIf="showPerformanceMetrics()" class="performance-metrics">
-          <h4>Template Performance</h4>
-          <p>Render Count: {{ renderCount() }}</p>
-          <p>Last Render: {{ lastRenderTime() }}ms</p>
-        </div>
+        @if (showPerformanceMetrics()) {
+          <div class="performance-metrics">
+            <h4>Template Performance</h4>
+            <p>Render Count: {{ renderCount() }}</p>
+            <p>Last Render: {{ lastRenderTime() }}ms</p>
+          </div>
+        }
       </div>
     </div>
-  `,
+    `,
   styleUrls: ['./cart-control-flow.component.css']
 })
 export class CartControlFlowComponent {

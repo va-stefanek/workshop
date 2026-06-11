@@ -1,104 +1,119 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-loading-skeleton',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
-    <div class="skeleton-container" [ngSwitch]="type">
-      
-      <!-- Product Card Skeleton -->
-      <div *ngSwitchCase="'product-card'" class="skeleton product-card-skeleton">
-        <div class="skeleton-image"></div>
-        <div class="skeleton-content">
-          <div class="skeleton-line skeleton-title"></div>
-          <div class="skeleton-line skeleton-subtitle"></div>
-          <div class="skeleton-line skeleton-text"></div>
-          <div class="skeleton-line skeleton-text short"></div>
-          <div class="skeleton-footer">
-            <div class="skeleton-line skeleton-price"></div>
-            <div class="skeleton-button"></div>
+    <div class="skeleton-container">
+      @switch (type) {
+        <!-- Product Card Skeleton -->
+        @case ('product-card') {
+          <div class="skeleton product-card-skeleton">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-line skeleton-title"></div>
+              <div class="skeleton-line skeleton-subtitle"></div>
+              <div class="skeleton-line skeleton-text"></div>
+              <div class="skeleton-line skeleton-text short"></div>
+              <div class="skeleton-footer">
+                <div class="skeleton-line skeleton-price"></div>
+                <div class="skeleton-button"></div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Cart Item Skeleton -->
-      <div *ngSwitchCase="'cart-item'" class="skeleton cart-item-skeleton">
-        <div class="skeleton-image small"></div>
-        <div class="skeleton-item-content">
-          <div class="skeleton-line skeleton-title"></div>
-          <div class="skeleton-line skeleton-subtitle"></div>
-          <div class="skeleton-line skeleton-price"></div>
-        </div>
-        <div class="skeleton-controls">
-          <div class="skeleton-button small"></div>
-          <div class="skeleton-button small"></div>
-        </div>
-      </div>
-
-      <!-- Text Lines Skeleton -->
-      <div *ngSwitchCase="'text'" class="skeleton text-skeleton">
-        <div 
-          *ngFor="let line of getLines()" 
-          class="skeleton-line"
-          [style.width.%]="line.width"
-        ></div>
-      </div>
-
-      <!-- Grid Skeleton -->
-      <div *ngSwitchCase="'grid'" class="skeleton-grid">
-        <div 
-          *ngFor="let item of getGridItems()" 
-          class="skeleton grid-item-skeleton"
-        >
-          <div class="skeleton-image"></div>
-          <div class="skeleton-line skeleton-title"></div>
-          <div class="skeleton-line skeleton-subtitle"></div>
-        </div>
-      </div>
-
-      <!-- List Skeleton -->
-      <div *ngSwitchCase="'list'" class="skeleton-list">
-        <div 
-          *ngFor="let item of getListItems()" 
-          class="skeleton list-item-skeleton"
-        >
-          <div class="skeleton-avatar"></div>
-          <div class="skeleton-list-content">
-            <div class="skeleton-line skeleton-title"></div>
-            <div class="skeleton-line skeleton-text"></div>
+        }
+        <!-- Cart Item Skeleton -->
+        @case ('cart-item') {
+          <div class="skeleton cart-item-skeleton">
+            <div class="skeleton-image small"></div>
+            <div class="skeleton-item-content">
+              <div class="skeleton-line skeleton-title"></div>
+              <div class="skeleton-line skeleton-subtitle"></div>
+              <div class="skeleton-line skeleton-price"></div>
+            </div>
+            <div class="skeleton-controls">
+              <div class="skeleton-button small"></div>
+              <div class="skeleton-button small"></div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Table Skeleton -->
-      <div *ngSwitchCase="'table'" class="skeleton-table">
-        <div class="skeleton-table-header">
-          <div 
-            *ngFor="let col of getTableColumns()" 
-            class="skeleton-line skeleton-header"
-          ></div>
-        </div>
-        <div 
-          *ngFor="let row of getTableRows()" 
-          class="skeleton-table-row"
-        >
-          <div 
-            *ngFor="let col of getTableColumns()" 
-            class="skeleton-line skeleton-cell"
-          ></div>
-        </div>
-      </div>
-
-      <!-- Default Skeleton -->
-      <div *ngSwitchDefault class="skeleton default-skeleton">
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line short"></div>
-        <div class="skeleton-line medium"></div>
-      </div>
+        }
+        <!-- Text Lines Skeleton -->
+        @case ('text') {
+          <div class="skeleton text-skeleton">
+            @for (line of getLines(); track line) {
+              <div
+                class="skeleton-line"
+                [style.width.%]="line.width"
+              ></div>
+            }
+          </div>
+        }
+        <!-- Grid Skeleton -->
+        @case ('grid') {
+          <div class="skeleton-grid">
+            @for (item of getGridItems(); track item) {
+              <div
+                class="skeleton grid-item-skeleton"
+                >
+                <div class="skeleton-image"></div>
+                <div class="skeleton-line skeleton-title"></div>
+                <div class="skeleton-line skeleton-subtitle"></div>
+              </div>
+            }
+          </div>
+        }
+        <!-- List Skeleton -->
+        @case ('list') {
+          <div class="skeleton-list">
+            @for (item of getListItems(); track item) {
+              <div
+                class="skeleton list-item-skeleton"
+                >
+                <div class="skeleton-avatar"></div>
+                <div class="skeleton-list-content">
+                  <div class="skeleton-line skeleton-title"></div>
+                  <div class="skeleton-line skeleton-text"></div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+        <!-- Table Skeleton -->
+        @case ('table') {
+          <div class="skeleton-table">
+            <div class="skeleton-table-header">
+              @for (col of getTableColumns(); track col) {
+                <div
+                  class="skeleton-line skeleton-header"
+                ></div>
+              }
+            </div>
+            @for (row of getTableRows(); track row) {
+              <div
+                class="skeleton-table-row"
+                >
+                @for (col of getTableColumns(); track col) {
+                  <div
+                    class="skeleton-line skeleton-cell"
+                  ></div>
+                }
+              </div>
+            }
+          </div>
+        }
+        <!-- Default Skeleton -->
+        @default {
+          <div class="skeleton default-skeleton">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+          </div>
+        }
+      }
     </div>
-  `,
+    `,
   styleUrls: ['./loading-skeleton.component.css']
 })
 export class LoadingSkeletonComponent {

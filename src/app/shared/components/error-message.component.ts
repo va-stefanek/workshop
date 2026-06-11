@@ -9,70 +9,86 @@ import { CommonModule } from '@angular/common';
     <div class="error-container" [ngClass]="['error-' + type, { 'error-dismissible': dismissible }]">
       <div class="error-content">
         <div class="error-icon">
-          <ng-container [ngSwitch]="type">
-            <span *ngSwitchCase="'warning'" class="icon">⚠️</span>
-            <span *ngSwitchCase="'info'" class="icon">ℹ️</span>
-            <span *ngSwitchCase="'success'" class="icon">✅</span>
-            <span *ngSwitchDefault class="icon">❌</span>
-          </ng-container>
+          @switch (type) {
+            @case ('warning') {
+              <span class="icon">⚠️</span>
+            }
+            @case ('info') {
+              <span class="icon">ℹ️</span>
+            }
+            @case ('success') {
+              <span class="icon">✅</span>
+            }
+            @default {
+              <span class="icon">❌</span>
+            }
+          }
         </div>
-        
+    
         <div class="error-message">
-          <h4 *ngIf="title" class="error-title">{{ title }}</h4>
+          @if (title) {
+            <h4 class="error-title">{{ title }}</h4>
+          }
           <p class="error-text">{{ message }}</p>
-          
-          <div *ngIf="details && showDetails" class="error-details">
-            <p><strong>Details:</strong></p>
-            <pre>{{ details }}</pre>
-          </div>
-          
-          <div *ngIf="showActions" class="error-actions">
-            <button 
-              *ngIf="retryable" 
-              class="btn btn-primary btn-small"
-              (click)="onRetry()"
-              [disabled]="retrying"
-            >
-              {{ retrying ? 'Retrying...' : 'Retry' }}
-            </button>
-            
-            <button 
-              *ngIf="details && !showDetails" 
-              class="btn btn-outline btn-small"
-              (click)="toggleDetails()"
-            >
-              Show Details
-            </button>
-            
-            <button 
-              *ngIf="details && showDetails" 
-              class="btn btn-outline btn-small"
-              (click)="toggleDetails()"
-            >
-              Hide Details
-            </button>
-            
-            <button 
-              *ngIf="dismissible" 
-              class="btn btn-outline btn-small"
-              (click)="onDismiss()"
-            >
-              Dismiss
-            </button>
-          </div>
+    
+          @if (details && showDetails) {
+            <div class="error-details">
+              <p><strong>Details:</strong></p>
+              <pre>{{ details }}</pre>
+            </div>
+          }
+    
+          @if (showActions) {
+            <div class="error-actions">
+              @if (retryable) {
+                <button
+                  class="btn btn-primary btn-small"
+                  (click)="onRetry()"
+                  [disabled]="retrying"
+                  >
+                  {{ retrying ? 'Retrying...' : 'Retry' }}
+                </button>
+              }
+              @if (details && !showDetails) {
+                <button
+                  class="btn btn-outline btn-small"
+                  (click)="toggleDetails()"
+                  >
+                  Show Details
+                </button>
+              }
+              @if (details && showDetails) {
+                <button
+                  class="btn btn-outline btn-small"
+                  (click)="toggleDetails()"
+                  >
+                  Hide Details
+                </button>
+              }
+              @if (dismissible) {
+                <button
+                  class="btn btn-outline btn-small"
+                  (click)="onDismiss()"
+                  >
+                  Dismiss
+                </button>
+              }
+            </div>
+          }
         </div>
-        
-        <button 
-          *ngIf="dismissible && !showActions" 
-          class="error-close"
-          (click)="onDismiss()"
-          title="Close"
-        >
-          ✕
-        </button>
+    
+        @if (dismissible && !showActions) {
+          <button
+            class="error-close"
+            (click)="onDismiss()"
+            title="Close"
+            >
+            ✕
+          </button>
+        }
       </div>
     </div>
-  `,
+    `,
   styleUrls: ['./error-message.component.css']
 })
 export class ErrorMessageComponent {

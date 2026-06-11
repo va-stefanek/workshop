@@ -33,7 +33,7 @@
           type="text"
           placeholder="Search items..."
           (input)="onSearchChange($any($event.target).value)"
-        />
+          />
       </div>
 
       <div class="filter-group">
@@ -50,7 +50,7 @@
         class="btn btn-secondary"
         [disabled]="!canRestorePreviousCart()"
         (click)="onRestorePreviousCart()"
-      >
+        >
         Restore Previous Cart
       </button>
       <button class="btn btn-outline" (click)="onClearCart()">
@@ -68,36 +68,36 @@
           <div
             class="product-card"
             (click)="onViewProduct(product)"
-          >
-          <img [src]="product.image" [alt]="product.name" />
-          <div class="product-info">
-            <h3>{{ product.name }}</h3>
-            <p class="product-description">{{ product.description }}</p>
-            <div class="product-price">
-              <span class="price">${{ product.price }}</span>
-              @if (product.discount) {
-                <span class="discount">
-                  -{{ product.discount }}%
-                </span>
-              }
+            >
+            <img [src]="product.image" [alt]="product.name" />
+            <div class="product-info">
+              <h3>{{ product.name }}</h3>
+              <p class="product-description">{{ product.description }}</p>
+              <div class="product-price">
+                <span class="price">${{ product.price }}</span>
+                @if (product.discount) {
+                  <span class="discount">
+                    -{{ product.discount }}%
+                  </span>
+                }
+              </div>
+              <div class="product-actions">
+                <button
+                  class="btn btn-primary"
+                  [disabled]="!product.inStock"
+                  (click)="onAddToCart(product); $event.stopPropagation()"
+                  >
+                  Add to Cart
+                </button>
+                <button
+                  class="btn btn-wishlist"
+                  [class.active]="isInWishlist(product.id)"
+                  (click)="isInWishlist(product.id) ? onRemoveFromWishlist(product.id) : onAddToWishlist(product.id); $event.stopPropagation()"
+                  >
+                  ♥
+                </button>
+              </div>
             </div>
-            <div class="product-actions">
-              <button
-                class="btn btn-primary"
-                [disabled]="!product.inStock"
-                (click)="onAddToCart(product); $event.stopPropagation()"
-              >
-                Add to Cart
-              </button>
-              <button
-                class="btn btn-wishlist"
-                [class.active]="isInWishlist(product.id)"
-                (click)="isInWishlist(product.id) ? onRemoveFromWishlist(product.id) : onAddToWishlist(product.id); $event.stopPropagation()"
-              >
-                ♥
-              </button>
-            </div>
-          </div>
           </div>
         }
       </div>
@@ -119,14 +119,14 @@
           @for (item of cartService.filteredItems(); track trackByProductId($index, item)) {
             <div class="cart-item">
               <img [src]="item.image" [alt]="item.name" class="item-image" />
-              
+
               <div class="item-details-section">
                 <div class="item-info">
                   <h4>{{ item.name }}</h4>
                   <p class="item-category">{{ item.category }}</p>
                   <p class="item-price">${{ item.price }} each</p>
                 </div>
-                
+
                 <div class="item-controls">
                   <div class="quantity-controls">
                     <button
@@ -134,7 +134,7 @@
                       (click)="decrementQuantity(item.productId, item.quantity)"
                       [attr.aria-label]="'Decrease quantity of ' + item.name"
                       [disabled]="item.quantity <= 1"
-                    >
+                      >
                       −
                     </button>
                     <span class="quantity">{{ item.quantity }}</span>
@@ -142,24 +142,24 @@
                       class="quantity-btn quantity-btn-increase"
                       (click)="incrementQuantity(item.productId, item.quantity)"
                       [attr.aria-label]="'Increase quantity of ' + item.name"
-                    >
+                      >
                       +
                     </button>
                   </div>
-                  
+
                   <div class="item-total">
                     ${{ (item.price * item.quantity).toFixed(2) }}
                   </div>
                 </div>
               </div>
-              
+
               <div class="item-actions">
                 <button
                   class="btn btn-danger btn-small"
                   (click)="onRemoveFromCart(item.productId)"
                   [attr.aria-label]="'Remove ' + item.name + ' from cart'"
                   title="Remove item"
-                >
+                  >
                   <span aria-hidden="true">✕</span>
                 </button>
               </div>
@@ -173,47 +173,49 @@
         <div class="cart-summary">
           <div class="summary-content">
             <h3>Advanced Cart Summary</h3>
-          <div class="summary-line">
-            <span>Total Items:</span>
-            <span>{{ cartService.cartSummary().totalItems }}</span>
-          </div>
-          <div class="summary-line">
-            <span>Subtotal:</span>
-            <span>${{ cartService.cartSummary().totalPrice.toFixed(2) }}</span>
-          </div>
-          <div class="summary-line" *ngIf="cartService.cartSummary().totalDiscount > 0">
-            <span>Discount:</span>
-            <span class="discount">-${{ cartService.cartSummary().totalDiscount.toFixed(2) }}</span>
-          </div>
-          <div class="summary-line">
-            <span>Tax:</span>
-            <span>${{ cartService.cartSummary().tax.toFixed(2) }}</span>
-          </div>
-          <div class="summary-line total">
-            <span>Total:</span>
-            <span>${{ cartService.cartSummary().finalPrice.toFixed(2) }}</span>
-          </div>
-
-          <!-- Shipping Info -->
-          <div class="shipping-info">
-            <h4>Shipping Information</h4>
-            <div class="shipping-line">
-              <span>Shipping Cost:</span>
-              <span [class.free]="cartService.shippingInfo().isFreeShipping">
-                {{ cartService.shippingInfo().isFreeShipping ? 'FREE' : '$' + cartService.shippingInfo().shippingCost }}
-              </span>
+            <div class="summary-line">
+              <span>Total Items:</span>
+              <span>{{ cartService.cartSummary().totalItems }}</span>
             </div>
-            @if (!cartService.shippingInfo().isFreeShipping) {
-              <div class="shipping-line">
-                <span>For free shipping, add:</span>
-                <span>${{ cartService.shippingInfo().amountForFreeShipping.toFixed(2) }}</span>
+            <div class="summary-line">
+              <span>Subtotal:</span>
+              <span>${{ cartService.cartSummary().totalPrice.toFixed(2) }}</span>
+            </div>
+            @if (cartService.cartSummary().totalDiscount > 0) {
+              <div class="summary-line">
+                <span>Discount:</span>
+                <span class="discount">-${{ cartService.cartSummary().totalDiscount.toFixed(2) }}</span>
               </div>
             }
-            <div class="shipping-line">
-              <span>Estimated Delivery:</span>
-              <span>{{ cartService.shippingInfo().estimatedDelivery }}</span>
+            <div class="summary-line">
+              <span>Tax:</span>
+              <span>${{ cartService.cartSummary().tax.toFixed(2) }}</span>
             </div>
-          </div>
+            <div class="summary-line total">
+              <span>Total:</span>
+              <span>${{ cartService.cartSummary().finalPrice.toFixed(2) }}</span>
+            </div>
+
+            <!-- Shipping Info -->
+            <div class="shipping-info">
+              <h4>Shipping Information</h4>
+              <div class="shipping-line">
+                <span>Shipping Cost:</span>
+                <span [class.free]="cartService.shippingInfo().isFreeShipping">
+                  {{ cartService.shippingInfo().isFreeShipping ? 'FREE' : '$' + cartService.shippingInfo().shippingCost }}
+                </span>
+              </div>
+              @if (!cartService.shippingInfo().isFreeShipping) {
+                <div class="shipping-line">
+                  <span>For free shipping, add:</span>
+                  <span>${{ cartService.shippingInfo().amountForFreeShipping.toFixed(2) }}</span>
+                </div>
+              }
+              <div class="shipping-line">
+                <span>Estimated Delivery:</span>
+                <span>{{ cartService.shippingInfo().estimatedDelivery }}</span>
+              </div>
+            </div>
           </div>
         </div>
       }
@@ -282,7 +284,7 @@
             <button
               class="btn btn-small btn-danger"
               (click)="onRemoveFromWishlist(productId)"
-            >
+              >
               Remove
             </button>
           </div>
