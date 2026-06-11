@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -22,9 +22,8 @@ interface DemoItem {
       <section class="demo-section">
         <h2>&#64;if Examples</h2>
     
-        <!-- TODO: Convert to @if syntax -->
         <div class="example">
-          <h3>Current (old syntax):</h3>
+          <h3>Live example (new syntax):</h3>
           @if (userLoggedIn()) {
             <div>
               Welcome back, {{ username() }}!
@@ -35,7 +34,7 @@ interface DemoItem {
         </div>
     
         <div class="example">
-          <h3>TODO: Convert to new &#64;if syntax:</h3>
+          <h3>Solution: &#64;if syntax</h3>
           <pre><code>&#64;if (userLoggedIn()) {{ '{' }}
             &lt;div&gt;Welcome back, {{ '{{' }} username() {{ '}}' }}!&lt;/div&gt;
             {{ '}' }} &#64;else {{ '{' }}
@@ -55,7 +54,7 @@ interface DemoItem {
         <h2>&#64;for Examples</h2>
     
         <div class="example">
-          <h3>Current (old syntax):</h3>
+          <h3>Live example (new syntax):</h3>
           @for (item of demoItems(); track trackByItemId(i, item); let i = $index) {
             <div
               class="item">
@@ -66,7 +65,7 @@ interface DemoItem {
         </div>
     
         <div class="example">
-          <h3>TODO: Convert to &#64;for syntax:</h3>
+          <h3>Solution: &#64;for syntax</h3>
           <pre><code>&#64;for (item of demoItems(); track item.id; let i = $index) {{ '{' }}
             &lt;div class="item"&gt;
             &lt;span&gt;{{ '{{' }} i + 1 {{ '}}' }}. {{ '{{' }} item.name {{ '}}' }}&lt;/span&gt;
@@ -88,7 +87,7 @@ interface DemoItem {
         <h2>&#64;switch Examples</h2>
     
         <div class="example">
-          <h3>Current (old syntax):</h3>
+          <h3>Live example (new syntax):</h3>
           <div>
             @switch (selectedViewMode()) {
               @case ('list') {
@@ -146,7 +145,7 @@ interface DemoItem {
         </div>
     
         <div class="example">
-          <h3>TODO: Convert to &#64;switch syntax:</h3>
+          <h3>Solution: &#64;switch syntax</h3>
           <pre><code>&#64;switch (selectedViewMode()) {{ '{' }}
             &#64;case ('list') {{ '{' }}
             &lt;h4&gt;List View&lt;/h4&gt;
@@ -226,6 +225,7 @@ interface DemoItem {
       </section>
     </div>
     `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./control-flow-demo.component.css']
 })
 export class ControlFlowDemoComponent {

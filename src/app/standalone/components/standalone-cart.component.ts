@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -40,7 +40,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
     
       <!-- Cart Status using new control flow -->
       <section class="cart-section">
-        <!-- TODO: Students will convert these to @if/@for/@switch -->
         @if (cartService.items().length > 0) {
           <div>
             <div class="cart-header">
@@ -54,7 +53,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
             </div>
             <!-- Cart Items List -->
             <div class="cart-items">
-              <!-- TODO: Convert to @for with proper tracking -->
               @for (item of cartService.items(); track trackByItemId($index, item)) {
                 <div
                   class="cart-item">
@@ -64,7 +62,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
                       <h4>{{ item.name }}</h4>
                       <p class="item-category">{{ item.category }}</p>
                       <p class="item-price">{{ item.price | currency }}</p>
-                      <!-- TODO: Convert to @if -->
                       @if (item.discount && item.discount > 0) {
                         <div class="discount-info">
                           <span class="discount-badge">{{ item.discount }}% OFF</span>
@@ -75,7 +72,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
                   </div>
                   <div class="item-controls">
                     <div class="quantity-controls">
-                      <!-- TODO: Convert to @if -->
                       @if (item.quantity > 1) {
                         <button
                           (click)="decreaseQuantity(item.id)"
@@ -101,7 +97,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
                   <span>Subtotal:</span>
                   <span>{{ cartService.summary().totalPrice | currency }}</span>
                 </div>
-                <!-- TODO: Convert to @if -->
                 @if (cartService.summary().totalDiscount > 0) {
                   <div class="summary-row discount">
                     <span>Discount:</span>
@@ -136,7 +131,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
         <p>Sample products to test the standalone cart functionality</p>
     
         <div class="quick-products">
-          <!-- TODO: Convert to @for -->
           @for (product of sampleProducts(); track trackByProductId($index, product)) {
             <div
               class="quick-product">
@@ -147,7 +141,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
                   <h4>{{ product.name }}</h4>
                   <p class="product-category">{{ product.category }}</p>
                   <p class="product-price">{{ product.price | currency }}</p>
-                  <!-- TODO: Convert to @if -->
                   @if (!isProductInCart(product.id)) {
                     <button
                       (click)="addToCart(product)"
@@ -193,7 +186,7 @@ import { CartItem } from '../../shared/models/cart-item.model';
     
           <div class="feature-card">
             <h3>🔄 New Control Flow</h3>
-            <p>Templates use &#64;if, &#64;for, &#64;switch syntax (TODO: Convert!)</p>
+            <p>Templates use &#64;if, &#64;for, &#64;switch syntax</p>
             <ul>
               <li>Better performance</li>
               <li>Cleaner syntax</li>
@@ -238,6 +231,7 @@ import { CartItem } from '../../shared/models/cart-item.model';
       </section>
     </div>
     `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./standalone-cart.component.css']
 })
 export class StandaloneCartComponent {
