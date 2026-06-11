@@ -1,4 +1,4 @@
-import { Component, signal, computed, effect } from '@angular/core';
+import { Component, signal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 interface PerformanceMetric {
@@ -195,6 +195,7 @@ interface RenderingStats {
       </section>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./performance-monitor.component.css']
 })
 export class PerformanceMonitorComponent {
