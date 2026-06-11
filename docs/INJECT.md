@@ -2,6 +2,12 @@
 
 Welcome to the **Modern Dependency Injection** module of the Angular Shopping Cart Workshop! This module focuses on mastering the inject() function, advanced provider patterns, and modern service composition techniques.
 
+> ⚠️ **Branch**: the exercise scaffolding for this module (the `config/`, `providers/` and `utils/` folders) lives on the **`workshop-starter-inject`** branch:
+> ```bash
+> git switch workshop-starter-inject && pnpm install
+> ```
+> On plain `workshop-starter` only the components and the service exist — Tasks 2, 4 and 5 reference files from that branch.
+
 ## 🎯 Learning Objectives
 
 By completing this module, you will:
@@ -180,58 +186,30 @@ export function provideInjectCart(config?: Partial<CartConfig>) {
       useValue: { ...DEFAULT_CART_CONFIG, ...config } 
     },
     
-    // Analytics provider with factory
+    // TODO: Analytics provider with factory
+    // - inject CART_CONFIG and HttpClient inside useFactory
+    // - construct CartAnalyticsService from them
     {
       provide: CartAnalyticsService,
-      useFactory: () => {
-        const config = inject(CART_CONFIG);
-        const http = inject(HttpClient);
-        return new CartAnalyticsService(config.analytics, http);
-      }
+      useFactory: () => { /* your factory */ }
     },
-    
-    // Storage provider based on environment
+
+    // TODO: Storage provider chosen by environment
+    // - inject PLATFORM_ID, use isPlatformBrowser()
+    // - return BrowserStorageService or ServerStorageService
     {
       provide: STORAGE_SERVICE,
-      useFactory: () => {
-        const platformId = inject(PLATFORM_ID);
-        return isPlatformBrowser(platformId) 
-          ? new BrowserStorageService()
-          : new ServerStorageService();
-      }
+      useFactory: () => { /* your factory */ }
     }
   ];
 }
 
-// TODO: Specialized providers for different features
-export function provideCartPersistence() {
-  return [
-    {
-      provide: CartPersistenceService,
-      useFactory: () => {
-        const storage = inject(STORAGE_SERVICE);
-        const config = inject(CART_CONFIG);
-        return new CartPersistenceService(storage, config.persistence);
-      }
-    }
-  ];
-}
-
-export function provideCartAnalytics(analyticsConfig?: AnalyticsConfig) {
-  return [
-    { provide: ANALYTICS_CONFIG, useValue: analyticsConfig },
-    {
-      provide: CartAnalyticsService,
-      useFactory: () => {
-        const config = inject(ANALYTICS_CONFIG, { optional: true });
-        const http = inject(HttpClient);
-        return config 
-          ? new CartAnalyticsService(config, http)
-          : new NoOpAnalyticsService();
-      }
-    }
-  ];
-}
+// TODO: Specialized provider functions
+// provideCartPersistence(): provide CartPersistenceService via a factory
+//   that injects STORAGE_SERVICE + CART_CONFIG
+// provideCartAnalytics(analyticsConfig?): provide ANALYTICS_CONFIG by value,
+//   then a factory that falls back to NoOpAnalyticsService when the config
+//   is absent (inject with { optional: true })
 ```
 
 ### Task 3: Implement Service with inject() Patterns
@@ -244,97 +222,25 @@ export function provideCartAnalytics(analyticsConfig?: AnalyticsConfig) {
   providedIn: 'root'
 })
 export class InjectCartService {
-  // TODO: Use inject() for all dependencies instead of constructor
-  private http = inject(HttpClient);
-  private storage = inject(STORAGE_SERVICE);
-  private config = inject(CART_CONFIG);
-  private analytics = inject(CartAnalyticsService, { optional: true });
-  private logger = inject(Logger, { optional: true });
-  
+  // TODO: Use inject() for ALL dependencies (no constructor parameters!)
+  // - HttpClient, STORAGE_SERVICE, CART_CONFIG
+  // - CartAnalyticsService and Logger as OPTIONAL injections
+
   // TODO: State management with signals
-  private cartItems = signal<CartItem[]>([]);
-  private cartMeta = signal<CartMetadata>({
-    sessionId: crypto.randomUUID(),
-    created: new Date(),
-    lastUpdated: new Date()
-  });
-  
-  // TODO: Readonly accessors
-  public readonly items = this.cartItems.asReadonly();
-  public readonly metadata = this.cartMeta.asReadonly();
-  
-  // TODO: Computed values
-  public readonly summary = computed(() => {
-    const items = this.cartItems();
-    const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-    
-    return {
-      totalPrice: total,
-      totalItems: itemCount,
-      tax: total * this.config.taxRate,
-      finalPrice: total * (1 + this.config.taxRate)
-    };
-  });
-  
+  // - cartItems: signal<CartItem[]>
+  // - cartMeta: signal<CartMetadata> (sessionId, created, lastUpdated)
+
+  // TODO: Readonly accessors (asReadonly) and a `summary` computed
+  // (totalPrice, totalItems, tax from config.taxRate, finalPrice)
+
   constructor() {
-    // TODO: Initialization logic using injected services
-    this.loadCartFromStorage();
-    this.setupAutoSave();
+    // TODO: load persisted cart, then set up an auto-save effect that
+    // writes items + metadata to the injected storage on every change
   }
-  
-  // TODO: Implement methods using injected dependencies
-  addItem(product: Product): void {
-    const currentItems = this.cartItems();
-    const existingItem = currentItems.find(item => item.productId === product.id);
-    
-    if (existingItem) {
-      this.updateQuantity(product.id, existingItem.quantity + 1);
-    } else {
-      const newItem: CartItem = {
-        id: crypto.randomUUID(),
-        productId: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-        addedAt: new Date()
-      };
-      
-      this.cartItems.update(items => [...items, newItem]);
-      this.updateMetadata();
-      this.analytics?.trackEvent('item_added', { productId: product.id });
-    }
-  }
-  
-  private loadCartFromStorage(): void {
-    try {
-      const stored = this.storage.getItem('inject-cart');
-      if (stored) {
-        const data = JSON.parse(stored);
-        this.cartItems.set(data.items || []);
-        this.cartMeta.set(data.metadata || this.createDefaultMetadata());
-      }
-    } catch (error) {
-      this.logger?.error('Failed to load cart from storage', error);
-    }
-  }
-  
-  private setupAutoSave(): void {
-    // TODO: Auto-save using effects
-    effect(() => {
-      const items = this.cartItems();
-      const metadata = this.cartMeta();
-      
-      try {
-        this.storage.setItem('inject-cart', JSON.stringify({
-          items,
-          metadata
-        }));
-      } catch (error) {
-        this.logger?.error('Failed to save cart to storage', error);
-      }
-    });
-  }
+
+  // TODO: addItem(product) — reuse the quantity-increment pattern from
+  // earlier levels; report 'item_added' through the OPTIONAL analytics
+  // service (what operator does optional chaining give you here?)
 }
 ```
 
@@ -403,117 +309,16 @@ export function createInjectionContext(providers: Provider[]) {
 **Functional Services**:
 ```typescript
 // TODO: Functional service creation patterns
-export function createCartAnalytics() {
-  const http = inject(HttpClient);
-  const config = inject(ANALYTICS_CONFIG, { optional: true });
-  
-  return {
-    trackEvent: (event: string, data: any) => {
-      if (!config?.enabled) return;
-      
-      return http.post(`${config.endpoint}/events`, {
-        event,
-        data,
-        timestamp: new Date().toISOString()
-      });
-    },
-    
-    trackPageView: (page: string) => {
-      if (!config?.enabled) return;
-      
-      return http.post(`${config.endpoint}/pageviews`, {
-        page,
-        timestamp: new Date().toISOString()
-      });
-    }
-  };
-}
+// TODO: createCartAnalytics()
+// - inject HttpClient and ANALYTICS_CONFIG ({ optional: true }) AT THE TOP
+//   (inject() only works in the synchronous part of the call!)
+// - return an object with trackEvent(event, data) and trackPageView(page)
+//   that no-op when config is absent/disabled
 
-export function createCartValidator() {
-  const config = inject(CART_CONFIG);
-  
-  return {
-    validateItem: (item: CartItem): ValidationResult => {
-      const errors: string[] = [];
-      
-      if (item.quantity <= 0) {
-        errors.push('Quantity must be greater than 0');
-      }
-      
-      if (item.quantity > config.maxQuantityPerItem) {
-        errors.push(`Quantity cannot exceed ${config.maxQuantityPerItem}`);
-      }
-      
-      if (item.price <= 0) {
-        errors.push('Price must be greater than 0');
-      }
-      
-      return {
-        isValid: errors.length === 0,
-        errors
-      };
-    },
-    
-    validateCart: (items: CartItem[]): ValidationResult => {
-      if (items.length > config.maxItemsPerCart) {
-        return {
-          isValid: false,
-          errors: [`Cart cannot contain more than ${config.maxItemsPerCart} items`]
-        };
-      }
-      
-      const itemValidations = items.map(item => this.validateItem(item));
-      const allErrors = itemValidations.flatMap(v => v.errors);
-      
-      return {
-        isValid: allErrors.length === 0,
-        errors: allErrors
-      };
-    }
-  };
-}
-
-// TODO: Composable service factories
-export function createCartService(options?: CartServiceOptions) {
-  const storage = inject(STORAGE_SERVICE);
-  const analytics = injectOptionalService(CartAnalyticsService);
-  const validator = createCartValidator();
-  
-  const cartItems = signal<CartItem[]>([]);
-  
-  return {
-    items: cartItems.asReadonly(),
-    
-    addItem: (product: Product) => {
-      const newItem: CartItem = {
-        id: crypto.randomUUID(),
-        productId: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-        addedAt: new Date()
-      };
-      
-      const validation = validator.validateItem(newItem);
-      if (!validation.isValid) {
-        throw new Error(validation.errors.join(', '));
-      }
-      
-      cartItems.update(items => [...items, newItem]);
-      analytics?.trackEvent('item_added', { productId: product.id });
-    },
-    
-    removeItem: (productId: string) => {
-      cartItems.update(items => items.filter(item => item.productId !== productId));
-      analytics?.trackEvent('item_removed', { productId });
-    },
-    
-    clear: () => {
-      cartItems.set([]);
-      analytics?.trackEvent('cart_cleared');
-    }
-  };
-}
+// TODO: createCartValidator()
+// - inject CART_CONFIG
+// - return { validateItem(item): ValidationResult, validateCart(items) }
+//   enforcing quantity > 0, price > 0 and config.maxItems
 ```
 
 ### Task 6: Testing Patterns with inject()

@@ -448,11 +448,14 @@ export class ProductFormComponent {
   
   /**
    * 🎯 WORKSHOP TASK 1.2: IMPLEMENT COMPUTED PROPERTIES
-   * 
-   * Create computed properties for form state:
-   * - isFormValid: computed(() => this.productForm().valid())
-   * - isFormTouched: computed(() => this.productForm().touched())
-   * - characterCount: computed(() => this.productForm.description().value().length)
+   *
+   * Create computed properties derived from the form's FieldState:
+   * - isFormValid: is the whole form valid? (which signal on the root field state tells you?)
+   * - isFormTouched: has the user touched the form?
+   * - characterCount: length of the description field's current value
+   *
+   * HINT: calling the form/field as a function gives you its FieldState,
+   * e.g. this.productForm() or this.productForm.description()
    */
   
   // Placeholder computeds - TODO: Implement real computeds
@@ -462,21 +465,16 @@ export class ProductFormComponent {
 
   /**
    * 🎯 WORKSHOP TASK 1.3: IMPLEMENT FORM SUBMISSION
-   * 
-   * Replace this method with proper signal form submission using the submit() function:
-   * 
-   * async onSubmit() {
-   *   await submit(this.productForm, async (form) => {
-   *     const productData = form().value();
-   *     const result = await this.productService.createProduct(productData);
-   *     
-   *     this.successMessage.set('Product created successfully!');
-   *     this.resetForm();
-   *     
-   *     // Return any server errors
-   *     return result.errors;
-   *   });
-   * }
+   *
+   * Replace this method with proper signal form submission using the
+   * submit() function from '@angular/forms/signals':
+   *
+   *   await submit(this.productForm, async (form) => { ... });
+   *
+   * Inside the action: read the value from the form's FieldState, send it
+   * through productService.createProduct(), set successMessage, reset the
+   * form — and return any server-side validation errors so signal forms
+   * can display them.
    */
   async onSubmit() {
     // TODO: Implement signal form submission

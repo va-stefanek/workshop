@@ -18,12 +18,10 @@ By completing this module, you will:
 
 **Primary Files:**
 - `src/app/control-flow/components/cart-control-flow.component.ts` - **STARTER FILE** (main workspace)
-- `src/app/control-flow/components/product-filter.component.ts` - Advanced filtering component
-- `src/app/control-flow/components/cart-analytics.component.ts` - Deferred analytics dashboard
+- `src/app/control-flow/components/performance-monitor.component.ts` - @defer playground (heavy sections to defer)
 
 **Supporting Files:**
 - `src/app/control-flow/services/control-flow-cart.service.ts` - Cart service with filtering
-- `src/app/control-flow/components/product-recommendations.component.ts` - Deferred recommendations
 
 ## 🏗 Architecture Overview
 
@@ -214,11 +212,12 @@ Angular's new control flow provides better performance and developer experience:
 
 **Goal**: Use @defer to optimize loading of heavy components.
 
-**Basic @defer Usage**:
+Work inside `performance-monitor.component.ts` — its template has heavy sections (charts, metrics) marked with `TODO: This could be deferred`. Wrap them in @defer blocks.
+
+**Basic @defer Usage** (wrap an existing heavy section, e.g. the metrics panel):
 ```html
-<!-- Defer heavy analytics component -->
 @defer {
-  <cart-analytics-dashboard [cartData]="cartService.cartItems()" />
+  <div class="heavy-analytics-section"><!-- existing markup --></div>
 } @loading {
   <div class="analytics-skeleton">
     <div class="skeleton-chart"></div>
@@ -236,34 +235,27 @@ Angular's new control flow provides better performance and developer experience:
 }
 ```
 
-**Advanced @defer with Triggers**:
+**Advanced @defer with Triggers** (apply each trigger to a different section of the performance monitor):
 ```html
-<!-- Defer product recommendations until user scrolls to view -->
+<!-- Below the fold: load when scrolled into view -->
 @defer (on viewport) {
-  <product-recommendations 
-    [currentCart]="cartService.cartItems()"
-    [userPreferences]="userService.preferences()" />
+  <div class="below-the-fold-section"><!-- existing markup --></div>
 } @loading (minimum 500ms) {
-  <div class="recommendations-loading">
-    <div class="skeleton-product" *ngFor="let i of [1,2,3,4]"></div>
-  </div>
+  <div class="skeleton-product"></div>
 } @placeholder (minimum 1s) {
-  <div class="recommendations-placeholder">
-    <h3>Recommended for You</h3>
-    <p>Scroll down to see personalized recommendations</p>
-  </div>
+  <p>Scroll down to load this section</p>
 }
 
-<!-- Defer cart history on user interaction -->
+<!-- Load on first interaction, or automatically after 5s -->
 @defer (on interaction; on timer(5s)) {
-  <cart-history [history]="cartService.cartHistory()" />
+  <div class="interaction-section"><!-- existing markup --></div>
 } @loading {
-  <div>Loading cart history...</div>
+  <div>Loading…</div>
 }
 
-<!-- Defer expensive calculations until browser is idle -->
+<!-- Expensive but non-urgent: wait for browser idle -->
 @defer (on idle) {
-  <cart-optimization-suggestions [cart]="cartService.cartItems()" />
+  <div class="idle-section"><!-- existing markup --></div>
 }
 ```
 

@@ -5,13 +5,14 @@ This guide walks you through setting up Angular Signal Forms in your project and
 ## 📋 Prerequisites
 
 ### System Requirements
-- Node.js 18+ 
-- Angular CLI 18+
+- Node.js 22.22+ or 24+
+- Angular CLI 22 (project uses Angular 22 + TypeScript 6)
+- pnpm 10+
 - Modern browser with JavaScript enabled
 - Code editor (VS Code recommended)
 
 ### Angular Version
-Signal Forms are experimental and require Angular 18.0.0 or later with the experimental forms package.
+Signal Forms ship as an **experimental** part of `@angular/forms` (the `@angular/forms/signals` entry point). This project is on Angular 22 — no extra package is needed.
 
 ## 🚀 Project Setup
 
@@ -21,53 +22,25 @@ Signal Forms are experimental and require Angular 18.0.0 or later with the exper
 # Navigate to project root
 cd shopping-cart-workshop
 
-# Install all dependencies
-npm install
-
-# Install Signal Forms experimental package (if not already included)
-npm install @angular/forms@experimental
+# Install all dependencies (Signal Forms are part of @angular/forms 22)
+pnpm install
 ```
 
-### 2. Configure Angular Application
+### 2. No Configuration Needed
 
-Update your `angular.json` to include Signal Forms:
-
-```json
-{
-  "projects": {
-    "shopping-cart-workshop": {
-      "architect": {
-        "build": {
-          "options": {
-            "experimentalSignalForms": true
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-### 3. Enable Signal Forms in App Module
-
-Update your main application configuration:
+Signal Forms require **no angular.json flags and no providers** — just import
+from the signals entry point where you use them:
 
 ```typescript
-// src/main.ts
-import { bootstrapApplication } from '@angular/platform-browser';
-import { provideExperimentalZonelessSignalForms } from '@angular/forms/signals';
-import { AppComponent } from './app/app.component';
-
-bootstrapApplication(AppComponent, {
-  providers: [
-    // Enable Signal Forms
-    provideExperimentalZonelessSignalForms(),
-    // ... other providers
-  ]
-});
+import { form, required, minLength, submit, FormField, FormRoot } from '@angular/forms/signals';
 ```
 
-### 4. Add Signal Forms Route
+One exception: if a form opts into the WebMCP agent integration via the
+`experimentalWebMcpTool` option on `form()`, the app must provide
+`provideExperimentalWebMcpForms()` (this project already does — see
+`src/app/app.config.ts` and `docs/WEBMCP.md`).
+
+### 3. Add Signal Forms Route
 
 Update your application routes:
 
@@ -169,7 +142,7 @@ src/app/signal-forms/
 ### 1. Start Development Server
 
 ```bash
-npm start
+pnpm start
 ```
 
 The application should start on `http://localhost:4200`
@@ -198,19 +171,14 @@ Look for these confirmation messages:
 
 ### Issue: "Cannot find module '@angular/forms/signals'"
 
-**Solution**: 
+**Solution**: reinstall dependencies — the signals entry point ships with `@angular/forms` 22:
 ```bash
-npm install @angular/forms@next
-# or 
-npm install @angular/forms@experimental
+pnpm install
 ```
 
-### Issue: "Signal Forms not enabled"
+### Issue: error mentioning `provideExperimentalWebMcpForms`
 
-**Solution**: Ensure you've added the provider:
-```typescript
-provideExperimentalZonelessSignalForms()
-```
+**Solution**: a form uses the `experimentalWebMcpTool` option, which requires that provider in `app.config.ts` (already configured in this project — see `docs/WEBMCP.md`).
 
 ### Issue: Components not loading
 
@@ -228,14 +196,12 @@ import { ProductFormComponent } from './components/product-form.component';
 ### 1. Before Starting Workshop
 
 ```bash
-# Pull latest changes
-git pull origin main
-
-# Install dependencies
-npm install
+# Switch to the forms branch and install
+git switch workshop-compelete-form
+pnpm install
 
 # Start development server
-npm start
+pnpm start
 
 # Open workshop in browser
 open http://localhost:4200/signal-forms
@@ -244,17 +210,11 @@ open http://localhost:4200/signal-forms
 ### 2. During Development
 
 ```bash
-# Run tests in watch mode
-npm run test:watch
+# Run tests in watch mode (Karma)
+pnpm run test
 
-# Check TypeScript errors
-npm run type-check
-
-# Lint code
-npm run lint
-
-# Format code
-npm run format
+# Type-check via a production build
+pnpm run build
 ```
 
 ### 3. Completing Tasks
@@ -325,13 +285,8 @@ The workshop uses localStorage for form persistence. Ensure it's enabled in your
 
 Test the workshop on different screen sizes:
 
-```bash
-# Install mobile testing tools
-npm install -g device-simulator-cli
-
-# Start with mobile simulation
-device-simulator start --device="iPhone 12"
-```
+Use the responsive mode in your browser DevTools (Cmd+Shift+M in Chrome)
+to test phone/tablet breakpoints.
 
 ### Touch Support
 
@@ -342,8 +297,8 @@ Ensure touch events work correctly on custom controls by testing on actual mobil
 ### Build for Production
 
 ```bash
-# Build with production optimizations
-npm run build:prod
+# Production build (the default configuration)
+pnpm run build
 
 # Verify build output
 ls -la dist/shopping-cart-workshop/
