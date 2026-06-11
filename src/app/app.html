@@ -5,32 +5,34 @@
         <h1>{{ title }}</h1>
         <p>Angular RxJS → Signals Migration Workshop</p>
       </div>
-      
+
       <nav class="main-nav">
-        <a 
-          *ngFor="let level of levels" 
-          [routerLink]="level.path"
-          routerLinkActive="active"
-          class="nav-link"
-        >
-          <div class="nav-card">
-            <div class="nav-header">
-              <h3>{{ level.name }}</h3>
-              <span class="difficulty" [class]="level.difficulty.toLowerCase()">
-                {{ level.difficulty }}
-              </span>
+        @for (level of levels; track level) {
+          <a
+            [routerLink]="level.path"
+            routerLinkActive="active"
+            class="nav-link"
+            >
+            <div class="nav-card">
+              <div class="nav-header">
+                <h3>{{ level.name }}</h3>
+                <span class="difficulty" [class]="level.difficulty.toLowerCase()">
+                  {{ level.difficulty }}
+                </span>
+              </div>
+              <p class="nav-description">{{ level.description }}</p>
+              <div class="nav-topics">
+                @for (topic of level.topics; track topic) {
+                  <span
+                    class="topic-tag"
+                    >
+                    {{ topic }}
+                  </span>
+                }
+              </div>
             </div>
-            <p class="nav-description">{{ level.description }}</p>
-            <div class="nav-topics">
-              <span 
-                *ngFor="let topic of level.topics" 
-                class="topic-tag"
-              >
-                {{ topic }}
-              </span>
-            </div>
-          </div>
-        </a>
+          </a>
+        }
       </nav>
     </div>
   </header>
@@ -49,7 +51,7 @@
           <li><a href="https://angular.dev/guide/signals" target="_blank">Angular Signals Guide</a></li>
         </ul>
       </div>
-      
+
       <div class="footer-section">
         <h4>Learning Objectives</h4>
         <ul>
@@ -59,7 +61,7 @@
           <li>Explore advanced patterns</li>
         </ul>
       </div>
-      
+
       <div class="footer-section">
         <h4>Built with</h4>
         <div class="tech-stack">
