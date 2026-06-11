@@ -16,9 +16,9 @@ This workshop is divided into three progressive levels:
 
 Before starting the workshop, ensure you have the following installed:
 
-- **Node.js** (version 18 or higher)
-- **npm** (version 9 or higher) 
-- **Angular CLI** (version 18 or higher)
+- **Node.js** 22.22+ or 24+ (required by Angular CLI 22)
+- **pnpm** 10+ (the repo pins it via the `packageManager` field)
+- **Angular CLI** version 22 (the project uses Angular 22 + TypeScript 6)
 - A modern code editor (VS Code recommended)
 - **Angular DevTools** browser extension (recommended)
 
@@ -31,12 +31,12 @@ Before starting the workshop, ensure you have the following installed:
 
 2. **Install dependencies**
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. **Start the development server**
    ```bash
-   npm start
+   pnpm start
    ```
 
 4. **Open your browser**
@@ -118,30 +118,28 @@ shopping-cart-workshop/
 ## 🛠 Available Scripts
 
 ```bash
-# Development
-npm start                    # Start development server
-npm run build               # Build for production
-npm run test                # Run all tests
-npm run lint                # Lint the codebase
-
-# Level-specific commands
-npm run start:basic         # Start basic level only
-npm run start:intermediate  # Start intermediate level only  
-npm run start:advanced      # Start advanced level only
-
-# Testing by level
-npm run test:basic          # Test basic level
-npm run test:intermediate   # Test intermediate level
-npm run test:advanced       # Test advanced level
+pnpm start          # Start development server (http://localhost:4200)
+pnpm run build      # Build for production
+pnpm run test       # Run unit tests (Karma, Chrome)
+pnpm run watch      # Rebuild on changes (development config)
 ```
+
+All levels run inside the same dev server — switch levels through the
+navigation header (`/basic`, `/intermediate`, `/advanced`, `/control-flow`,
+`/standalone`, `/inject`, `/signal-forms`, `/webmcp`).
 
 ## 🧭 Navigation
 
 The workshop includes a navigation header that allows you to switch between levels:
 
-- **Basic Level** (Green badge): RxJS implementation
-- **Intermediate Level** (Orange badge): Signals + Computed  
-- **Advanced Level** (Red badge): Resource API + Advanced patterns
+- **Basic Level**: RxJS implementation
+- **Intermediate Level**: Signals + Computed
+- **Advanced Level**: Resource API + Advanced patterns
+- **Control Flow**: @if/@for/@switch/@defer template syntax
+- **Standalone**: module-free architecture
+- **Modern DI**: inject() patterns (see docs/INJECT.md for its dedicated branch)
+- **Signal Forms**: experimental signal-based forms
+- **WebMCP**: exposing the app as AI agent tools (see docs/WEBMCP.md)
 
 Each level is fully functional and can be explored independently.
 
@@ -195,24 +193,21 @@ Monitor in the Console:
 **Issue:** `ng serve` fails to start
 **Solution:** 
 ```bash
-rm -rf node_modules package-lock.json
-npm install
+rm -rf node_modules
+pnpm install
 ```
 
 **Issue:** Angular DevTools not showing signals
 **Solution:** 
 - Ensure you have Angular DevTools extension installed
 - Refresh the page after opening DevTools
-- Make sure you're using Angular 16+
+- Make sure you're using a current Angular DevTools version (the app runs Angular 22)
 
 **Issue:** Tests failing
 **Solution:**
 ```bash
-# Run tests with more verbose output
-npm run test -- --verbose
-
-# Run specific test file
-npm run test -- --include="**/basic/**"
+# Run tests once, headless
+pnpm exec ng test --watch=false --browsers=ChromeHeadless
 ```
 
 **Issue:** TypeScript compilation errors
