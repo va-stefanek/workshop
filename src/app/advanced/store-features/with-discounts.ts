@@ -135,17 +135,22 @@ export function withDiscounts() {
       ),
 
       // Check if any discounts are applied
-      hasDiscounts: computed(() => 
+      hasDiscounts: computed(() =>
         store.appliedDiscounts().length > 0 || store.appliedCoupons().length > 0
-      ),
+      )
+    })),
 
+    // Computed signals derived from other computed signals must live in a
+    // separate withComputed block, so the previous block's members are
+    // available on the store parameter
+    withComputed((store) => ({
       // Get bulk discounts available based on quantity
-      availableBulkDiscounts: computed(() => 
+      availableBulkDiscounts: computed(() =>
         store.activeDiscounts().filter(d => d.type === 'bulk')
       ),
 
       // Get category discounts
-      categoryDiscounts: computed(() => 
+      categoryDiscounts: computed(() =>
         store.activeDiscounts().filter(d => d.type === 'category')
       )
     })),

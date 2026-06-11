@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 
 @Component({
@@ -114,6 +114,7 @@ import { Component, Input } from '@angular/core';
       }
     </div>
     `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./loading-skeleton.component.css']
 })
 export class LoadingSkeletonComponent {

@@ -32,7 +32,7 @@ export function withAnalytics(config: { enablePerformanceTracking?: boolean } = 
       events: [],
       currentSession: {
         sessionId: generateSessionId(),
-        userId: null,
+        userId: undefined,
         startTime: new Date(),
         endTime: undefined,
         events: [],
@@ -153,8 +153,12 @@ export function withAnalytics(config: { enablePerformanceTracking?: boolean } = 
             }
           });
         }
-      },
+      }
+    })),
 
+    // Methods that delegate to trackCustom need a separate withMethods
+    // block, so trackCustom is available on the store parameter
+    withMethods((store) => ({
       // Track page view
       trackPageView: (page: string) => {
         const session = store.currentSession();

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartNgrxSignalsService } from '../services/cart-ngrx-signals.service';
@@ -16,6 +16,7 @@ type CategoryType = 'electronics' | 'clothing' | 'books' | 'home' | 'sports';
   templateUrl: './cart-ngrx-signals.component.html',
   styleUrls: ['./cart-ngrx-signals.component.css'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     FormsModule,
