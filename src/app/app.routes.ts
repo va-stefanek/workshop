@@ -42,6 +42,11 @@ export const routes: Routes = [
     title: 'Signal Forms Workshop - Angular Shopping Cart'
   },
   {
+    path: 'webmcp',
+    loadChildren: () => import('./webmcp/webmcp.routes').then(m => m.WEBMCP_ROUTES),
+    title: 'WebMCP - AI Agent Tools (Experimental)'
+  },
+  {
     path: '**',
     redirectTo: '/basic'
   }

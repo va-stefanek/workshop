@@ -55,12 +55,19 @@ export class App {
       difficulty: 'Advanced',
       topics: ['inject()', 'Provider Functions', 'Testing', 'Composition']
     },
-    { 
-      path: '/signal-forms', 
-      name: 'Signal Forms', 
+    {
+      path: '/signal-forms',
+      name: 'Signal Forms',
       description: 'Experimental Signal-Based Forms',
       difficulty: 'Advanced',
       topics: ['form()', 'Custom Controls', 'Validation', 'submit()']
+    },
+    {
+      path: '/webmcp',
+      name: 'WebMCP',
+      description: 'AI Agent Tools (Experimental)',
+      difficulty: 'Advanced',
+      topics: ['WebMCP', 'Tools', 'inputSchema', 'Signal Forms']
     }
   ];
 }
