@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -30,6 +30,7 @@ import {
 @Component({
   selector: 'provider-functions',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, RouterModule],
   template: `
     <div class="providers-container">
@@ -46,20 +47,20 @@ import {
         <h2>Pattern 1: Basic Provider Functions</h2>
         <div class="provider-demo">
           <h3>provideInjectCart() - Core Cart Providers</h3>
-          <pre><code>export function provideInjectCart(config?: Partial<CartConfig>) {
+          <pre><code>export function provideInjectCart(config?: Partial&lt;CartConfig&gt;) &#123;
   return [
     InjectCartService,
-    { provide: CART_CONFIG, useValue: createCartConfig(config) },
-    {
+    &#123; provide: CART_CONFIG, useValue: createCartConfig(config) &#125;,
+    &#123;
       provide: 'CartAnalyticsService',
-      useFactory: () => {
+      useFactory: () =&gt; &#123;
         const config = inject(CART_CONFIG);
         const http = inject(HttpClient);
         return new CartAnalyticsService(config, http);
-      }
-    }
+      &#125;
+    &#125;
   ];
-}</code></pre>
+&#125;</code></pre>
           
           <div class="provider-status">
             <h4>Provider Status:</h4>
@@ -92,14 +93,14 @@ import {
         <div class="provider-demo">
           <h3>Factory Functions with Internal inject() Calls</h3>
           <pre><code>// Factory provider that uses inject() internally
-{
+&#123;
   provide: 'CartAnalyticsService',
-  useFactory: () => {
+  useFactory: () =&gt; &#123;
     const config = inject(CART_CONFIG);  // inject() inside factory
     const http = inject(HttpClient);
     return new CartAnalyticsService(config, http);
-  }
-}</code></pre>
+  &#125;
+&#125;</code></pre>
           
           <div class="factory-display">
             <h4>Factory Provider Results:</h4>
@@ -125,21 +126,21 @@ import {
         <h2>Pattern 3: Multi-Provider and Environment Providers</h2>
         <div class="provider-demo">
           <h3>Environment-Specific Provider Configuration</h3>
-          <pre><code>export function provideCartEnvironment() {
+          <pre><code>export function provideCartEnvironment() &#123;
   return makeEnvironmentProviders([
     // Core providers
     ...provideInjectCart(),
     
     // Environment-specific providers
-    {
+    &#123;
       provide: 'EnvironmentService',
-      useFactory: () => {
+      useFactory: () =&gt; &#123;
         const features = inject(FEATURE_FLAGS);
         return new EnvironmentService(features);
-      }
-    }
+      &#125;
+    &#125;
   ]);
-}</code></pre>
+&#125;</code></pre>
           
           <div class="environment-display">
             <h4>Environment Configuration:</h4>
@@ -164,22 +165,22 @@ import {
         <h2>Pattern 4: Conditional Provider Creation</h2>
         <div class="provider-demo">
           <h3>Feature Flag Based Provider Selection</h3>
-          <pre><code>export function provideCartFeatures() {
+          <pre><code>export function provideCartFeatures() &#123;
   return [
-    {
+    &#123;
       provide: 'FeatureService',
-      useFactory: () => {
+      useFactory: () =&gt; &#123;
         const flags = inject(FEATURE_FLAGS);
         
-        if (flags.advancedCart) {
+        if (flags.advancedCart) &#123;
           return new AdvancedCartFeatureService();
-        } else {
+        &#125; else &#123;
           return new BasicCartFeatureService();
-        }
-      }
-    }
+        &#125;
+      &#125;
+    &#125;
   ];
-}</code></pre>
+&#125;</code></pre>
           
           <div class="conditional-display">
             <h4>Conditional Provider Status:</h4>
@@ -207,16 +208,16 @@ import {
           <h3>Creating Custom Injection Contexts</h3>
           <pre><code>// Create custom injection context
 const context = createInjectionContext([
-  { provide: CART_CONFIG, useValue: customConfig },
-  { provide: 'Logger', useClass: CustomLogger }
+  &#123; provide: CART_CONFIG, useValue: customConfig &#125;,
+  &#123; provide: 'Logger', useClass: CustomLogger &#125;
 ]);
 
 // Run function in injection context
-const result = context(() => {
+const result = context(() =&gt; &#123;
   const config = inject(CART_CONFIG);
   const logger = inject('Logger');
   return new CustomService(config, logger);
-});</code></pre>
+&#125;);</code></pre>
           
           <div class="context-display">
             <h4>Runtime Context Examples:</h4>
@@ -249,13 +250,13 @@ const result = context(() => {
         <h2>Pattern 6: Testing Provider Patterns</h2>
         <div class="provider-demo">
           <h3>Mock Providers for Testing</h3>
-          <pre><code>export function provideCartTesting() {
+          <pre><code>export function provideCartTesting() &#123;
   return [
-    { provide: 'STORAGE_SERVICE', useClass: MockStorageService },
-    { provide: 'CartAnalyticsService', useClass: MockAnalyticsService },
-    { provide: CART_CONFIG, useValue: TEST_CONFIG }
+    &#123; provide: 'STORAGE_SERVICE', useClass: MockStorageService &#125;,
+    &#123; provide: 'CartAnalyticsService', useClass: MockAnalyticsService &#125;,
+    &#123; provide: CART_CONFIG, useValue: TEST_CONFIG &#125;
   ];
-}</code></pre>
+&#125;</code></pre>
           
           <div class="testing-display">
             <h4>Testing Provider Setup:</h4>

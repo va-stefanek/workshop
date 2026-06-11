@@ -1,4 +1,4 @@
-import { inject, Injectable, makeEnvironmentProviders, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable, InjectionToken, makeEnvironmentProviders, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -73,7 +73,7 @@ export function provideCartPersistence() {
     {
       provide: 'CartPersistenceService',
       useFactory: () => {
-        const storage = inject('STORAGE_SERVICE');
+        const storage = inject('STORAGE_SERVICE' as unknown as InjectionToken<any>);
         const config = inject(PERSISTENCE_CONFIG);
         
         // TODO: Return actual persistence service

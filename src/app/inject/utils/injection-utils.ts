@@ -35,10 +35,11 @@ export function createCartFactory(customConfig?: Partial<CartConfig>) {
  * TODO: This will be implemented as part of Task 4
  * Utility for optional service injection with error handling
  */
-export function injectOptionalService<T>(token: Type<T> | InjectionToken<T>): T | null {
+export function injectOptionalService<T>(token: Type<T> | InjectionToken<T> | string): T | null {
   try {
     // TODO: Students will implement safe optional injection
-    return inject(token, { optional: true });
+    // String tokens work at runtime but are not part of inject()'s typings
+    return inject(token as Type<T> | InjectionToken<T>, { optional: true });
   } catch (error) {
     console.warn('Failed to inject optional service:', error);
     return null;
@@ -127,30 +128,32 @@ export function createCartAnalytics() {
 export function createCartValidator() {
   // TODO: Students will implement functional validator
   const config = inject(CART_CONFIG);
-  
+
+  const validateItem = (item: any): ValidationResult => {
+    const errors: string[] = [];
+
+    // TODO: Students will implement validation logic
+    if (item.quantity <= 0) {
+      errors.push('Quantity must be greater than 0');
+    }
+
+    if (item.quantity > config.maxQuantityPerItem) {
+      errors.push(`Quantity cannot exceed ${config.maxQuantityPerItem}`);
+    }
+
+    if (item.price <= 0) {
+      errors.push('Price must be greater than 0');
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  };
+
   return {
-    validateItem: (item: any): ValidationResult => {
-      const errors: string[] = [];
-      
-      // TODO: Students will implement validation logic
-      if (item.quantity <= 0) {
-        errors.push('Quantity must be greater than 0');
-      }
-      
-      if (item.quantity > config.maxQuantityPerItem) {
-        errors.push(`Quantity cannot exceed ${config.maxQuantityPerItem}`);
-      }
-      
-      if (item.price <= 0) {
-        errors.push('Price must be greater than 0');
-      }
-      
-      return {
-        isValid: errors.length === 0,
-        errors
-      };
-    },
-    
+    validateItem,
+
     validateCart: (items: any[]): ValidationResult => {
       // TODO: Students will implement cart-level validation
       if (items.length > config.maxItems) {
@@ -159,10 +162,10 @@ export function createCartValidator() {
           errors: [`Cart cannot contain more than ${config.maxItems} items`]
         };
       }
-      
-      const itemValidations = items.map(item => this.validateItem(item));
+
+      const itemValidations = items.map(item => validateItem(item));
       const allErrors = itemValidations.flatMap(v => v.errors);
-      
+
       return {
         isValid: allErrors.length === 0,
         errors: allErrors
@@ -177,8 +180,8 @@ export function createCartValidator() {
  */
 export function createCartService(options?: CartServiceOptions) {
   // TODO: Students will implement service composition
-  const storage = injectOptionalService('STORAGE_SERVICE');
-  const analytics = injectOptionalService('CartAnalyticsService');
+  const storage = injectOptionalService<any>('STORAGE_SERVICE');
+  const analytics = injectOptionalService<any>('CartAnalyticsService');
   const validator = createCartValidator();
   
   // TODO: Create cart state signal

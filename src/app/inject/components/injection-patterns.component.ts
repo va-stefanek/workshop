@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal, PLATFORM_ID } from '@angular/core';
+import { Component, inject, computed, signal, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -22,6 +22,7 @@ import {
 @Component({
   selector: 'injection-patterns',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, RouterModule],
   template: `
     <div class="patterns-container">
@@ -39,24 +40,24 @@ import {
         <div class="comparison-grid">
           <div class="pattern-card old-way">
             <h3>❌ Old Way: Constructor Injection</h3>
-            <pre><code>@Component({})
-export class OldComponent {
+            <pre><code>&#64;Component(&#123;&#125;)
+export class OldComponent &#123;
   constructor(
     private http: HttpClient,
     private router: Router,
     private service: MyService
-  ) {}
-}</code></pre>
+  ) &#123;&#125;
+&#125;</code></pre>
           </div>
           
           <div class="pattern-card new-way">
             <h3>✅ New Way: inject() Function</h3>
-            <pre><code>@Component({})
-export class ModernComponent {
+            <pre><code>&#64;Component(&#123;&#125;)
+export class ModernComponent &#123;
   private http = inject(HttpClient);
   private router = inject(Router);
   private service = inject(MyService);
-}</code></pre>
+&#125;</code></pre>
           </div>
         </div>
         <div class="pattern-info">
@@ -72,13 +73,13 @@ export class ModernComponent {
         <div class="pattern-demo">
           <h3>Optional Services with Graceful Fallbacks</h3>
           <pre><code>// Optional service that may not be provided
-private analytics = inject(AnalyticsService, { optional: true });
-private logger = inject(Logger, { optional: true });
+private analytics = inject(AnalyticsService, &#123; optional: true &#125;);
+private logger = inject(Logger, &#123; optional: true &#125;);
 
 // Use with null checks
-if (this.analytics) {
+if (this.analytics) &#123;
   this.analytics.trackEvent('user_action');
-}</code></pre>
+&#125;</code></pre>
           
           <div class="demo-results">
             <p><strong>Analytics Service:</strong> {{ optionalInjectionInfo().analyticsAvailable ? '✅ Available' : '❌ Not Available' }}</p>
@@ -109,7 +110,7 @@ if (this.analytics) {
         <div class="pattern-demo">
           <h3>Inject Configuration with Fallbacks</h3>
           <pre><code>// Configuration injection with fallback
-private config = inject(CART_CONFIG, { optional: true }) ?? DEFAULT_CONFIG;
+private config = inject(CART_CONFIG, &#123; optional: true &#125;) ?? DEFAULT_CONFIG;
 
 // Use configuration
 const maxItems = this.config.maxItems;
@@ -169,7 +170,7 @@ private storage = isPlatformBrowser(inject(PLATFORM_ID))
           <h3>Inject Services Based on Feature Flags</h3>
           <pre><code>// Conditional injection based on feature flags
 private advancedFeatures = inject(FEATURE_FLAGS)?.advancedCart
-  ? inject(AdvancedCartService, { optional: true })
+  ? inject(AdvancedCartService, &#123; optional: true &#125;)
   : null;</code></pre>
           
           <div class="feature-flags-display">
@@ -196,9 +197,9 @@ private advancedFeatures = inject(FEATURE_FLAGS)?.advancedCart
         <div class="pattern-demo">
           <h3>Measure inject() Performance</h3>
           <pre><code>// Measure injection performance
-const result = measureInjectionPerformance(() => {
+const result = measureInjectionPerformance(() =&gt; &#123;
   return inject(ExpensiveService);
-});</code></pre>
+&#125;);</code></pre>
           
           <div class="performance-display">
             <button class="btn btn-primary" (click)="measurePerformance()">
@@ -425,6 +426,9 @@ const result = measureInjectionPerformance(() => {
   `]
 })
 export class InjectionPatternsComponent {
+  // Expose Object for template Object.entries() usage
+  protected readonly Object = Object;
+
   // Demonstrate different inject() patterns
   
   // Pattern 1: Basic injection
