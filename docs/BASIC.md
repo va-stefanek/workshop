@@ -17,7 +17,7 @@ By completing this level, you will:
 
 **Primary Files:**
 - `src/app/basic/services/shopping-cart-rxjs.service.ts` - **STARTER FILE** (your main workspace)
-- `src/app/basic/cart-rxjs.component.ts` - UI component (pre-built, routed at `/basic/rxjs`)
+- UI component (pre-built): `src/app/basic/cart-rxjs.component.ts` on `workshop-starter` (routed at `/basic/rxjs`); `src/app/basic/components/cart-basic.component.ts` on `workshop-complete`
 
 **Reference Files:**
 - Full solution: branch `workshop-complete` (`git switch workshop-complete`)
