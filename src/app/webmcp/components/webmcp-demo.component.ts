@@ -79,6 +79,11 @@ import { UserRegistrationFormComponent } from './user-registration-form.componen
           Live registry of <code>document.modelContext</code> registrations.
           Invoke them by hand to prove they work on real app state.
         </p>
+        <p class="console-hint">
+          External agents (and you, in the DevTools console) can do the same:
+          <code>webmcpDemo.listTools()</code> ·
+          <code>await webmcpDemo.callTool('searchCatalog', {{ '{' }} query: 'laptop' {{ '}' }})</code>
+        </p>
 
         @for (tool of tools(); track tool.name) {
           <div class="tool-card">
@@ -267,6 +272,20 @@ import { UserRegistrationFormComponent } from './user-registration-form.componen
       color: #6c757d;
       font-style: italic;
       margin: 0.4rem 0 0;
+    }
+
+    .console-hint {
+      font-size: 0.8rem;
+      padding: 0.5rem 0.75rem;
+      background: #e7f3ff;
+      border-radius: 6px;
+      color: #0056b3;
+    }
+
+    .console-hint code {
+      background: rgba(0, 86, 179, 0.1);
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
     }
   `],
 })

@@ -97,6 +97,30 @@ Angular registers tools into `document.modelContext ?? navigator.modelContext` a
 - **Chrome 149+** — WebMCP origin trial (since June 2026). Locally: enable the WebMCP flag in `chrome://flags`. The page badge shows "Native browser WebMCP".
 - **Any other browser** — `src/app/webmcp/model-context-shim.ts` installs a minimal `document.modelContext` before bootstrap, so the demo page can list and invoke the registered tools. There is also a community polyfill: `@mcp-b/webmcp-polyfill` (useful for unit tests too).
 
+## 🤖 Proving a REAL agent sees the tools
+
+Native WebMCP exposes tools only to the browser's own agent — page scripts can't call them. For the demo, the shim publishes `window.webmcpDemo` so any agent that can execute JavaScript on the page can do exactly what a native agent does:
+
+```js
+webmcpDemo.listTools()                                          // discovery
+await webmcpDemo.callTool('searchCatalog', { query: 'laptop' }) // invocation
+```
+
+**Option A — Claude Code + chrome-devtools MCP (works today, most impressive):**
+Start the app (`pnpm start`), open Claude Code with the chrome-devtools MCP server and paste:
+
+> Open http://localhost:4200/webmcp in the browser. Discover what WebMCP tools the page
+> exposes using `webmcpDemo.listTools()`, then use them to: find a laptop under $1500
+> and register the workshop attendee Jan Kowalski, age 30. Explain each step.
+
+The agent will list the tools, read the schemas, call `searchCatalog`, reason about prices, call `registerUser` — and the audience watches the page UI update live ("Jan Kowalski (30)" appears under the form). If the agent passes invalid data, Angular's form validation rejects it with readable messages — the same pipeline a human goes through.
+
+**Option B — DevTools console (zero setup, you play the agent):**
+Open the console on `/webmcp` and run the two lines above. Great for explaining the protocol before showing a real agent.
+
+**Option C — Native: Chrome 149 + WebMCP flag (origin trial, June 2026):**
+Enable the WebMCP flag in `chrome://flags`, reload — the page badge flips to "Native browser WebMCP" and the browser's built-in agent (e.g. Gemini in Chrome) discovers the same tools without any shim. There are also bridge extensions (e.g. MCP-B / `@mcp-b/webmcp-local-relay`) that forward page tools to MCP clients like Claude Desktop.
+
 ## 🎬 Demo Script (for presenters)
 
 1. Open `/webmcp` — four tools are listed: `greet`, `searchCatalog`, `getCounter`, `registerUser`.
