@@ -31,7 +31,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
         <p>Learn &#64;if, &#64;for, &#64;switch, and &#64;defer patterns</p>
       </header>
     
-      <!-- TODO: Convert these structural directives to new control flow -->
       <!--
       Current implementation uses old syntax - convert to:
       &#64;if, &#64;for, &#64;switch, &#64;defer
@@ -41,13 +40,11 @@ import { CartItem } from '../../shared/models/cart-item.model';
       <div class="filter-section">
         <h2>Filter Controls</h2>
     
-        <!-- TODO: Convert ngSwitch to &#64;switch -->
         <div>
           @switch (activeFilterType()) {
             @case ('category') {
               <div>
                 <h3>Filter by Category</h3>
-                <!-- TODO: Convert ngFor to &#64;for -->
                 @for (category of availableCategories(); track trackByCategory($index, category)) {
                   <button
                     [class.active]="selectedCategory() === category"
@@ -81,27 +78,23 @@ import { CartItem } from '../../shared/models/cart-item.model';
     
       <!-- Cart Status using &#64;if -->
       <div class="cart-status">
-        <!-- TODO: Convert ngIf to &#64;if -->
         @if (cartService.cartItems().length > 0) {
           <div>
             <h2>Shopping Cart ({{ cartService.totalItems() }} items)</h2>
             <!-- Cart Items using &#64;for -->
             <div class="cart-items">
-              <!-- TODO: Convert ngFor to &#64;for with proper tracking -->
               @for (item of cartService.cartItems(); track trackByItemId($index, item)) {
                 <div
                   class="cart-item">
                   <h4>{{ item.name }}</h4>
                   <span>{{ item.price | currency }}</span>
                   <!-- Conditional content using &#64;if -->
-                  <!-- TODO: Convert ngIf to &#64;if -->
                   @if (item.discount && item.discount > 0) {
                     <div class="discount-badge">
                       {{ item.discount }}% OFF
                     </div>
                   }
                   <div class="quantity-controls">
-                    <!-- TODO: Convert ngIf to &#64;if -->
                     @if (item.quantity > 1) {
                       <button
                       (click)="decreaseQuantity(item.id)">-</button>
@@ -197,7 +190,6 @@ import { CartItem } from '../../shared/models/cart-item.model';
           {{ showPerformanceMetrics() ? 'Hide' : 'Show' }} Performance Metrics
         </button>
     
-        <!-- TODO: Convert ngIf to &#64;if -->
         @if (showPerformanceMetrics()) {
           <div class="performance-metrics">
             <h4>Template Performance</h4>

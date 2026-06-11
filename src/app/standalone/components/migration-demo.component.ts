@@ -51,7 +51,6 @@ interface MigrationStep {
       <div class="migration-steps">
         <h2>Migration Steps</h2>
     
-        <!-- TODO: Convert to @for -->
         @for (step of migrationSteps(); track step; let i = $index) {
           <div class="step-card">
             <div class="step-header">
@@ -76,12 +75,10 @@ interface MigrationStep {
                   <pre><code>{{ step.after }}</code></pre>
                 </div>
               </div>
-              <!-- TODO: Convert to @if -->
               @if (step.benefits.length > 0) {
                 <div class="step-benefits">
                   <h4>Benefits:</h4>
                   <ul>
-                    <!-- TODO: Convert to @for -->
                     @for (benefit of step.benefits; track benefit) {
                       <li>{{ benefit }}</li>
                     }
@@ -129,7 +126,6 @@ interface MigrationStep {
         </div>
       </div>
     
-      <!-- TODO: Convert to @if -->
       @if (showAnalysis()) {
         <div class="analysis-results">
           <h2>Dependency Analysis Results</h2>
@@ -166,7 +162,6 @@ interface MigrationStep {
         <div class="checklist-section">
           <h3>Pre-Migration</h3>
           <div class="checklist-items">
-            <!-- TODO: Convert to @for -->
             @for (item of preMigrationChecklist(); track item) {
               <label class="checklist-item">
                 <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('pre', item.id)">
@@ -179,7 +174,6 @@ interface MigrationStep {
         <div class="checklist-section">
           <h3>During Migration</h3>
           <div class="checklist-items">
-            <!-- TODO: Convert to @for -->
             @for (item of duringMigrationChecklist(); track item) {
               <label class="checklist-item">
                 <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('during', item.id)">
@@ -192,7 +186,6 @@ interface MigrationStep {
         <div class="checklist-section">
           <h3>Post-Migration</h3>
           <div class="checklist-items">
-            <!-- TODO: Convert to @for -->
             @for (item of postMigrationChecklist(); track item) {
               <label class="checklist-item">
                 <input type="checkbox" [checked]="item.completed" (change)="toggleChecklistItem('post', item.id)">
