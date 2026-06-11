@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { form, required, email, minLength, pattern, applyWhen, submit } from '@angular/forms/signals';
@@ -508,6 +508,7 @@ interface UserProfileFormData {
       </div>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .profile-form-container {
       max-width: 900px;

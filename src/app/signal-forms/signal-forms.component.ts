@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductFormComponent } from './components/product-form.component';
 import { CheckoutFormComponent } from './components/checkout-form.component';
@@ -80,6 +80,7 @@ import { ReviewFormComponent } from './components/review-form.component';
       </footer>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .signal-forms-workshop {
       max-width: 1200px;

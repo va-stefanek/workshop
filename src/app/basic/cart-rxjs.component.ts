@@ -1,5 +1,5 @@
 // step-1-rxjs/cart-rxjs.component.ts - PROSTSZA WERSJA
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CartRxjsService} from './services/shopping-cart-rxjs.service';
 import {Product} from '../shared/models';
@@ -61,6 +61,7 @@ import {Product} from '../shared/models';
       </section>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .cart-container {
       display: grid;

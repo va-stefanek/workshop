@@ -1,14 +1,14 @@
 // step-3-signal-store/cart-store.component.ts
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartStore } from './cart.store';
 import {Product} from '../shared/models';
-import {Control, form} from '@angular/forms/signals';
+import {FormField, form} from '@angular/forms/signals';
 
 @Component({
   selector: 'app-cart-store',
   standalone: true,
-  imports: [CommonModule, Control],
+  imports: [CommonModule, FormField],
   template: `
     <div class="cart-container">
       <header class="cart-header">
@@ -49,7 +49,7 @@ import {Control, form} from '@angular/forms/signals';
           </div>
         }
 
-        <input [control]="filterForm.query">
+        <input [formField]="filterForm.query">
 
         @if (cartStore.hasItems()) {
           <div class="cart-items">
@@ -131,6 +131,7 @@ import {Control, form} from '@angular/forms/signals';
       } | json }}</pre>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .cart-container {
       max-width: 1400px;

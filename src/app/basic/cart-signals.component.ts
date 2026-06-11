@@ -1,5 +1,5 @@
 // step-2-signals/cart-signals.component.ts
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CartSignalsService} from './services/cart-signals.service';
 import {Product} from '../shared/models';
@@ -62,6 +62,7 @@ import {CartStore} from './cart.store';
       </section>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .cart-container {
       display: grid;
