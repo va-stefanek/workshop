@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { form, required, email, minLength, min, max, Control, submit } from '@angular/forms/signals';
+import { form, required, email, minLength, min, max, FormField, submit } from '@angular/forms/signals';
 import { Product } from '../../shared/models/product.model';
 import { Category } from '../../shared/models/category.model';
 import { ProductService } from '../../shared/services/product.service';
@@ -40,7 +40,7 @@ interface ProductFormData {
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, Control],
+  imports: [CommonModule, ReactiveFormsModule, FormField],
   template: `
     <div class="product-form-container">
       <h2>🛍️ Product Management Form</h2>
@@ -58,7 +58,7 @@ interface ProductFormData {
             type="text"
             class="form-control"
             [class.error]="productForm.name().errors().length > 0"
-            [control]="productForm.name"
+            [formField]="productForm.name"
             placeholder="Enter product name">
           
           @if (productForm.name().errors().length > 0 && productForm.name().touched()) {
@@ -75,7 +75,7 @@ interface ProductFormData {
             id="category" 
             class="form-control"
             [class.error]="productForm.category().errors().length > 0"
-            [control]="productForm.category">
+            [formField]="productForm.category">
             <option value="">Select a category</option>
             <option value="electronics">Electronics</option>
             <option value="clothing">Clothing</option>
@@ -99,10 +99,9 @@ interface ProductFormData {
               id="price"
               type="number"
               step="0.01"
-              min="0"
               class="form-control"
               [class.error]="productForm.price().errors().length > 0"
-              [control]="productForm.price"
+              [formField]="productForm.price"
               placeholder="0.00">
           </div>
           
@@ -120,10 +119,10 @@ interface ProductFormData {
             id="description"
             class="form-control"
             [class.error]="productForm.description().errors().length > 0"
-            [control]="productForm.description"
+            [formField]="productForm.description"
             rows="4"
             placeholder="Describe the product..."
-            maxlength="500"></textarea>
+           ></textarea>
           
           <!-- Character count with signals -->
           <div class="form-help">
@@ -144,7 +143,7 @@ interface ProductFormData {
               id="inStock"
               type="checkbox"
               class="checkbox"
-              [control]="productForm.inStock">
+              [formField]="productForm.inStock">
             <label for="inStock">Product is in stock</label>
           </div>
         </div>
@@ -156,7 +155,7 @@ interface ProductFormData {
             id="imageUrl"
             type="url"
             class="form-control"
-            [control]="productForm.imageUrl"
+            [formField]="productForm.imageUrl"
             placeholder="https://example.com/product-image.jpg">
           
           <!-- Image Preview -->

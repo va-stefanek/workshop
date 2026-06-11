@@ -1,4 +1,4 @@
-import { Component, input, signal, computed, model } from '@angular/core';
+import { Component, input, signal, computed, model, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormValueControl } from '@angular/forms/signals';
 
@@ -75,6 +75,7 @@ import { FormValueControl } from '@angular/forms/signals';
       }
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .rating-control {
       display: flex;

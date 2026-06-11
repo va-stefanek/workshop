@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { form, required, email, pattern, applyWhen, submit, Control } from '@angular/forms/signals';
+import { form, required, email, pattern, applyWhen, submit, FormField } from '@angular/forms/signals';
 
 /**
  * 🛒 TASK 2: MULTI-STEP CHECKOUT FORM (INTERMEDIATE LEVEL)
@@ -68,7 +68,7 @@ interface CheckoutFormData {
 @Component({
   selector: 'app-checkout-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, Control],
+  imports: [CommonModule, ReactiveFormsModule, FormField],
   template: `
     <div class="checkout-container">
       <h2>🛒 Multi-Step Checkout Form</h2>
@@ -110,7 +110,7 @@ interface CheckoutFormData {
                   type="text"
                   class="form-control"
                   [class.error]="getFieldError('shipping.firstName')"
-                  [control]="checkoutForm.shipping.firstName"
+                  [formField]="checkoutForm.shipping.firstName"
                   placeholder="John">
                 @if (getFieldError('shipping.firstName') && checkoutForm.shipping.firstName().touched()) {
                   <div class="error-message">
@@ -258,7 +258,7 @@ interface CheckoutFormData {
                     type="text"
                     class="form-control"
                     [class.error]="getFieldError('payment.cardNumber')"
-                    [control]="checkoutForm.payment.cardNumber"
+                    [formField]="checkoutForm.payment.cardNumber"
                     placeholder="1234 5678 9012 3456">
                   @if (getFieldError('payment.cardNumber') && checkoutForm.payment.cardNumber().touched()) {
                     <div class="error-message">
@@ -295,7 +295,7 @@ interface CheckoutFormData {
                   type="text"
                   class="form-control"
                   [class.error]="getFieldError('payment.cardholderName')"
-                  [control]="checkoutForm.payment.cardholderName"
+                  [formField]="checkoutForm.payment.cardholderName"
                   placeholder="John Doe">
                 @if (getFieldError('payment.cardholderName') && checkoutForm.payment.cardholderName().touched()) {
                   <div class="error-message">
