@@ -126,7 +126,6 @@ src/app/signal-forms/
 │   ├── quantity-selector.component.ts
 │   └── price-input.component.ts
 ├── services/               # Form-related services
-│   ├── signal-form.service.ts
 │   ├── form-validation.service.ts
 │   └── form-submission.service.ts
 ├── validators/             # Custom validators
