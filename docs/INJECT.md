@@ -27,6 +27,10 @@ By completing this module, you will:
 - `src/app/inject/services/inject-cart.service.ts` - Service using inject() patterns
 - `src/app/inject/providers/cart-providers.ts` - Advanced provider functions
 
+**Working Example (provided, no TODOs):**
+- `src/app/inject/components/inject-async-demo.component.ts` - injectAsync() lazy service injection demo (route: `/inject/async`)
+- `src/app/inject/services/cart-report.service.ts` - the lazily-loaded service
+
 **Supporting Files:**
 - `src/app/inject/utils/injection-utils.ts` - Utility functions with inject()
 - `src/app/inject/config/cart-config.ts` - Configuration and tokens
@@ -101,6 +105,27 @@ export class ModernComponent {
   private analytics = inject(AnalyticsService, { optional: true });
 }
 ```
+
+### New in Angular 22: injectAsync()
+
+`inject()` resolves a service that must already be in the bundle. `injectAsync()` injects a *loader* instead — the service's chunk is downloaded on first use (or prefetched when the browser is idle):
+
+```typescript
+// field initializer = injection context
+private reportService = injectAsync(() =>
+  import('../services/cart-report.service').then(m => m.CartReportService)
+);
+
+async generateReport() {
+  const service = await this.reportService(); // lazy chunk loads HERE, once
+  this.report.set(await service.generateCatalogReport());
+}
+
+// optional prefetch while the browser is idle:
+injectAsync(loader, { prefetch: onIdle });
+```
+
+Requirements: the target service must be auto-provided (`providedIn: 'root'` or `@Service()`), and `injectAsync` itself must run in an injection context. Try it live at `/inject/async` — watch the Network tab on the first click.
 
 ### Step 2: Navigate to Inject Module
 
