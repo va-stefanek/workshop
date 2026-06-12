@@ -89,7 +89,7 @@ shopping-cart-workshop/
 
 **Key Files:**
 - `src/app/basic/services/shopping-cart-rxjs.service.ts`
-- `src/app/basic/components/cart-basic.component.ts`
+- UI component: `src/app/basic/cart-rxjs/cart-rxjs.component.ts` (workshop-starter) / `src/app/basic/components/cart-basic.component.ts` (workshop-complete)
 
 ### Level 2: Intermediate (Signals + Computed)
 **Learning Objectives:**
