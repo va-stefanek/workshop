@@ -1,0 +1,57 @@
+<div class="async-demo-container">
+  <header class="page-header">
+    <h1>⏳ injectAsync() — Lazy Service Injection</h1>
+    <p class="subtitle">
+      The report service lives in its own lazy chunk — it is downloaded the
+      first time you ask for the report, not when this page loads.
+    </p>
+    <nav>
+      <a routerLink="/inject" class="back-btn">← Back to inject() Cart</a>
+    </nav>
+  </header>
+
+  <section class="demo-section">
+    <h2>Catalog report (lazy-loaded service)</h2>
+    <p>
+      Open DevTools → Network, then click the button: the
+      <code>cart-report.service</code> chunk appears only on the first click.
+      The console logs the moment the service is instantiated.
+    </p>
+
+    <button class="btn-primary" (click)="generateReport()" [disabled]="status() === 'loading'">
+      {{ status() === 'loading' ? 'Loading chunk…' : 'Generate report' }}
+    </button>
+
+    @if (loadTimeMs() !== null) {
+      <p class="timing">
+        Resolved in {{ loadTimeMs() }} ms
+        <span class="hint">(click again — the chunk is cached, the instance is reused)</span>
+      </p>
+    }
+
+    @if (report(); as r) {
+      <pre class="report">{{ r }}</pre>
+    }
+  </section>
+
+  <section class="demo-section">
+    <h2>How it works</h2>
+    <pre class="code-sample">// field initializer = injection context
+private reportService = injectAsync(() =>
+  import('../services/cart-report.service').then(m => m.CartReportService)
+);
+
+async generateReport() &#123;
+  const service = await this.reportService(); // chunk loads HERE (once)
+  this.report.set(await service.generateCatalogReport());
+&#125;
+
+// optional: download the chunk while the browser is idle
+injectAsync(loader, &#123; prefetch: onIdle &#125;);</pre>
+    <ul class="facts">
+      <li>The lazily injected service must be auto-provided (<code>providedIn: 'root'</code> or <code>&#64;Service()</code>)</li>
+      <li><code>injectAsync</code> must run in an injection context — fields and constructors, not event handlers</li>
+      <li>Repeated calls return the same instance; the network cost is paid once</li>
+    </ul>
+  </section>
+</div>

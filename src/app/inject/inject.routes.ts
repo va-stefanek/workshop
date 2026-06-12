@@ -20,5 +20,10 @@ export const INJECT_ROUTES: Routes = [
     path: 'testing',
     loadComponent: () => import('./components/testing-patterns.component').then(m => m.TestingPatternsComponent),
     title: 'Testing with inject()'
+  },
+  {
+    path: 'async',
+    loadComponent: () => import('./components/inject-async-demo.component').then(m => m.InjectAsyncDemoComponent),
+    title: 'injectAsync() - Lazy Service Injection'
   }
 ];
