@@ -3,6 +3,7 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ShoppingCartRxjsService} from './services/shopping-cart-rxjs.service';
 import {Product} from '../shared/models';
+import {httpResource} from '@angular/common/http';
 
 @Component({
   selector: 'app-cart-rxjs',
@@ -62,67 +63,11 @@ import {Product} from '../shared/models';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
-  styles: [`
-    .cart-container {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 2rem;
-      padding: 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .products, .cart {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-      margin-bottom: 1rem;
-      color: #333;
-    }
-
-    .product-card, .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .quantity-controls {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    button {
-      padding: 0.5rem 1rem;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    .cart-total {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 2px solid #e0e0e0;
-    }
-  `]
+  styleUrl: './cart-rxjs.component.css',
 })
 export class CartRxjsComponent {
   cartService = inject(ShoppingCartRxjsService);
+  items = httpResource(() => 'api/products')
 
   // Sample products for demo
   sampleProducts: Product[] = [

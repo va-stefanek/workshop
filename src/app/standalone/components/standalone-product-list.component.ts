@@ -28,38 +28,7 @@ import { RouterModule } from '@angular/router';
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
-  styles: [`
-    .product-list-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      text-align: center;
-    }
-    
-    .back-btn {
-      display: inline-block;
-      background: #4f46e5;
-      color: white;
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      margin: 1rem;
-    }
-    
-    .coming-soon {
-      background: #f3f4f6;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 2rem;
-      margin-top: 2rem;
-    }
-    
-    .coming-soon ul {
-      text-align: left;
-      max-width: 400px;
-      margin: 0 auto;
-    }
-  `]
+  styleUrl: './standalone-product-list.component.css',
 })
 export class StandaloneProductListComponent {
 }
