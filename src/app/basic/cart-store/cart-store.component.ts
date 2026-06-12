@@ -1,8 +1,8 @@
 // step-3-signal-store/cart-store.component.ts
 import {Component, inject, signal, ChangeDetectionStrategy} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CartStore } from './cart.store';
-import {Product} from '../shared/models';
+import { CartStore } from '../cart.store';
+import {Product} from '../../shared/models';
 import {FormField, form} from '@angular/forms/signals';
 
 @Component({

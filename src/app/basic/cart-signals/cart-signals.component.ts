@@ -1,9 +1,9 @@
 // step-2-signals/cart-signals.component.ts
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {CartSignalsService} from './services/cart-signals.service';
-import {Product} from '../shared/models';
-import {CartStore} from './cart.store';
+import {CartSignalsService} from '../services/cart-signals.service';
+import {Product} from '../../shared/models';
+import {CartStore} from '../cart.store';
 
 @Component({
   selector: 'app-cart-signals',

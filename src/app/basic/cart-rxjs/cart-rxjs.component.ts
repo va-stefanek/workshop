@@ -1,8 +1,8 @@
 // step-1-rxjs/cart-rxjs.component.ts - PROSTSZA WERSJA
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {ShoppingCartRxjsService} from './services/shopping-cart-rxjs.service';
-import {Product} from '../shared/models';
+import {ShoppingCartRxjsService} from '../services/shopping-cart-rxjs.service';
+import {Product} from '../../shared/models';
 import {httpResource} from '@angular/common/http';
 
 @Component({
