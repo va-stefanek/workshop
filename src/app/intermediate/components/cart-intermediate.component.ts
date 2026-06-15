@@ -20,9 +20,9 @@ export class CartIntermediateComponent implements OnInit {
   public cartService = inject(CartComputedService);
   public effectsService = inject(CartEffectsService);
   private productService = inject(ProductService);
-  
+
   products$: Observable<Product[]>;
-  
+
   constructor() {
     this.products$ = this.productService.getProducts();
   }

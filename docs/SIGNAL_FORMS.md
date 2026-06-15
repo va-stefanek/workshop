@@ -300,18 +300,6 @@ validateAsync(f.email, async (value) => {
 });
 ```
 
-## 🧪 Testing Your Implementation
-
-Run the built-in tests to verify your implementation:
-
-```bash
-# Run unit tests
-npm test
-
-# Run e2e tests
-npm run e2e
-```
-
 ## 🎯 Bonus Challenges
 
 Once you've completed the core tasks, try these advanced challenges:
@@ -344,7 +332,7 @@ Track your progress through the workshop:
 - [ ] **Task 3 Complete**: User profile with nested forms
 - [ ] **Task 4 Complete**: Custom controls integration
 - [ ] **Documentation**: Read through all provided examples
-- [ ] **Testing**: All form validations working correctly
+- [ ] **Validation**: All form validations working correctly
 - [ ] **Bonus**: Attempted at least one advanced challenge
 
 ## 🆘 Troubleshooting

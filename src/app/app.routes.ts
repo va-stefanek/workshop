@@ -47,6 +47,11 @@ export const routes: Routes = [
     title: 'WebMCP - AI Agent Tools (Experimental)'
   },
   {
+    path: 'live-demo',
+    loadChildren: () => import('./live-demo/live-demo.routes').then(m => m.LIVE_DEMO_ROUTES),
+    title: 'Live Demo - Signals, computed, linkedSignal & resource'
+  },
+  {
     path: '**',
     redirectTo: '/basic'
   }

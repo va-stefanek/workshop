@@ -1,387 +1,73 @@
-# Basic Level - RxJS Shopping Cart Implementation
-
-Welcome to the **Basic Level** of the Angular Shopping Cart Workshop! In this level, you'll implement a reactive shopping cart using traditional RxJS patterns with BehaviorSubjects and Observables.
-
-## 🎯 Learning Objectives
-
-By completing this level, you will:
-
-- Master RxJS `BehaviorSubject` and `Observable` patterns
-- Implement reactive state management for a shopping cart
-- Handle asynchronous operations and side effects
-- Create reactive UI components that respond to state changes
-- Understand data flow in reactive applications
-- Implement local storage persistence
-
-## 📁 Files You'll Work With
-
-**Primary Files:**
-- `src/app/basic/services/shopping-cart-rxjs.service.ts` - **STARTER FILE** (your main workspace)
-- UI component (pre-built): `src/app/basic/cart-rxjs.component.ts` on `workshop-starter` (routed at `/basic/rxjs`); `src/app/basic/components/cart-basic.component.ts` on `workshop-complete`
-
-**Reference Files:**
-- Full solution: branch `workshop-complete` (`git switch workshop-complete`)
-- `src/app/basic/services/shopping-cart-signals.service.ts` - signals version of the same cart (preview of the next step)
-- `src/app/shared/services/product.service.ts` - Product data service (pre-built)
-
-## 🏗 Architecture Overview
-
-The RxJS implementation follows these patterns:
-
-```
-┌─────────────────────────────────────────────┐
-│              Component Layer                │
-│  ┌─────────────────────────────────────┐   │
-│  │     CartBasicComponent              │   │
-│  │  - Subscribes to cart state        │   │
-│  │  - Displays products and cart      │   │
-│  │  - Handles user interactions       │   │
-│  └─────────────────────────────────────┘   │
-└─────────────────┬───────────────────────────┘
-                  │ subscribes to
-                  ▼
-┌─────────────────────────────────────────────┐
-│              Service Layer                  │
-│  ┌─────────────────────────────────────┐   │
-│  │   ShoppingCartRxjsService           │   │
-│  │  - BehaviorSubject<CartItem[]>      │   │
-│  │  - Observable streams               │   │
-│  │  - State management logic          │   │
-│  │  - LocalStorage persistence        │   │
-│  └─────────────────────────────────────┘   │
-└─────────────────────────────────────────────┘
-```
-
-## 🚀 Getting Started
-
-### Step 1: Examine the Starter Code
-
-Open `src/app/basic/services/shopping-cart-rxjs.service.ts` and examine the starter code:
-
-```typescript
-@Injectable({ providedIn: 'root' })
-export class ShoppingCartRxjsService {
-  private itemsSubject = new BehaviorSubject<CartItem[]>([]);
-  items$ = this.itemsSubject.asObservable();
-  
-  constructor() {
-    // TODO: Load items from localStorage if available
-  }
-  
-  // TODO: Implement methods
-}
-```
-
-### Step 2: Navigate to Basic Level
-
-1. Start the development server: `pnpm start`
-2. Open your browser to `http://localhost:4200`
-3. Click on "Basic Level" in the navigation
-4. You should see the basic shopping cart interface
-
-## 📝 Implementation Tasks
-
-### Task 1: Initialize the Service
-
-**Goal**: Set up the service constructor with localStorage loading.
-
-**Requirements**:
-```typescript
-constructor() {
-  // Load cart from localStorage on initialization
-  this.loadCartFromStorage();
-}
-```
-
-**Key Concepts**:
-- Service initialization
-- LocalStorage persistence setup
-- Preparation for reactive patterns
-
-### Task 2: Implement `addItem` Method
-
-**Goal**: Add products to the cart, handling both new items and quantity updates.
-
-**Method Signature**:
-```typescript
-addItem(product: Product): void
-```
-
-**Requirements**:
-- If item doesn't exist, add it with quantity 1
-- If item exists, increase quantity by 1
-- Update the BehaviorSubject with new state
-- Save to localStorage
-
-**Hints**:
-```typescript
-addItem(product: Product): void {
-  const currentItems = this.itemsSubject.value;
-  const existingItem = currentItems.find(item => item.productId === product.id);
-  
-  if (existingItem) {
-    // TODO: Update quantity
-  } else {
-    // TODO: Create new CartItem and add to array
-  }
-  
-  // TODO: Update BehaviorSubject and save to storage
-}
-```
-
-### Task 3: Implement `removeItem` Method
-
-**Goal**: Remove items from the cart completely.
-
-**Method Signature**:
-```typescript
-removeItem(productId: string): void
-```
-
-**Requirements**:
-- Remove item with matching productId
-- Update BehaviorSubject
-- Save to localStorage
+# Basic — RxJS Cart
 
-### Task 4: Implement `updateQuantity` Method
+**Goal:** implement the cart in `src/app/basic/services/shopping-cart-rxjs.service.ts` with
+`BehaviorSubject` + Observables — state held in the subject, derived totals via `map`. The UI is
+already done; you only fill in this one service.
 
-**Goal**: Update the quantity of an existing cart item.
+**Run:** `ng serve` → http://localhost:4200 → Basic. Compiles from the start (`getCartSummary` /
+`getTotalItems` return placeholder streams); the mutating methods throw until written.
 
-**Method Signature**:
-```typescript
-updateQuantity(productId: string, quantity: number): void
-```
-
-**Requirements**:
-- If quantity ≤ 0, remove the item
-- Otherwise, update the item's quantity
-- Update BehaviorSubject
-- Save to localStorage
-
-### Task 5: Implement `clearCart` Method
-
-**Goal**: Remove all items from the cart.
-
-**Method Signature**:
-```typescript
-clearCart(): void
-```
-
-**Requirements**:
-- Set items to empty array
-- Update BehaviorSubject
-- Clear localStorage
-
-### Task 6: Implement `getCartSummary` Method
-
-**Goal**: Create an Observable that provides calculated cart totals.
-
-**Method Signature**:
-```typescript
-getCartSummary(): Observable<CartSummary>
-```
-
-**Requirements**:
-- Return Observable that emits CartSummary
-- Calculate total items, total price, discounts, tax, and final price
-- Use the `map` operator to transform cart items
-
-**CartSummary Interface** (already defined in `src/app/shared/models` — just import it):
-```typescript
-interface CartSummary {
-  totalItems: number;
-  totalPrice: number;
-  totalDiscount: number;
-  tax: number;           // 8% of (totalPrice - totalDiscount)
-  finalPrice: number;    // totalPrice - totalDiscount + tax
-}
-```
-
-### Task 7: Implement `getTotalItems` Method
-
-**Goal**: Create an Observable that emits the total number of items.
-
-**Method Signature**:
-```typescript
-getTotalItems(): Observable<number>
-```
-
-**Requirements**:
-- Return Observable<number>
-- Sum all item quantities
-- Use RxJS operators
-
-### Task 8: Review the Provided Helper Methods
-
-**Goal**: Understand the utility methods that are already implemented for you at the bottom of the starter file.
-
-```typescript
-private generateId(): string        // unique ID for cart items (timestamp + random string)
-private saveCartToStorage(): void   // persists current items to localStorage
-private loadCartFromStorage(): void // restores items from localStorage (with JSON error handling)
-```
-
-You will CALL these helpers from the methods you implement in Tasks 1-5 — you don't need to write them.
-
-## ✅ Testing Your Implementation
-
-### Manual Testing
-
-1. **Add Items**: Click "Add to Cart" on various products
-2. **Quantity Updates**: Use +/- buttons to modify quantities
-3. **Remove Items**: Click "Remove" buttons
-4. **Clear Cart**: Use "Clear Cart" button
-5. **Persistence**: Refresh the page and verify cart persists
-6. **Calculations**: Verify totals, discounts, and tax are correct
-
-### Automated Testing
-
-Run the test suite for the basic level:
-
-## 🧪 Code Examples
-
-### Adding an Item (Complete Example)
-
-```typescript
-addItem(product: Product): void {
-  const currentItems = this.itemsSubject.value;
-  const existingItem = currentItems.find(item => item.productId === product.id);
-  
-  if (existingItem) {
-    // Item exists, increase quantity
-    this.updateQuantity(product.id, existingItem.quantity + 1);
-  } else {
-    // New item, add to cart
-    const newItem: CartItem = {
-      id: this.generateId(),
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      image: product.image,
-      category: product.category,
-      discount: product.discount
-    };
-    
-    const updatedItems = [...currentItems, newItem];
-    this.itemsSubject.next(updatedItems);
-    this.saveCartToStorage();
-  }
-}
-```
-
-### Cart Summary with RxJS Operators
-
-```typescript
-getCartSummary(): Observable<CartSummary> {
-  return this.items$.pipe(
-    map(items => {
-      const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-      const totalPrice = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const totalDiscount = items.reduce((sum, item) => {
-        const discount = item.discount || 0;
-        return sum + (item.price * item.quantity * discount / 100);
-      }, 0);
-      
-      const tax = (totalPrice - totalDiscount) * 0.08;
-      const finalPrice = totalPrice - totalDiscount + tax;
-
-      return {
-        totalItems,
-        totalPrice,
-        totalDiscount,
-        tax,
-        finalPrice
-      };
-    })
-  );
-}
-```
-
-## 🔧 Debugging Tips
-
-### Common Issues
-
-**Issue**: "Cannot read property 'value' of undefined"
-**Solution**: Ensure BehaviorSubject is properly initialized
-
-**Issue**: Items not persisting after page refresh
-**Solution**: Check localStorage browser compatibility and error handling
-
-**Issue**: Cart total not updating automatically  
-**Solution**: Verify subscription in constructor is set up correctly
-
-### Using Angular DevTools
-
-1. Open Angular DevTools in your browser
-2. Navigate to the "Components" tab
-3. Select the CartBasicComponent
-4. Observe the service subscriptions and data flow
-
-### Console Debugging
-
-Add debug logging to your service:
-
-```typescript
-addItem(product: Product): void {
-  console.log('Adding item:', product);
-  // ... implementation
-  console.log('Current cart:', this.itemsSubject.value);
-}
-```
-
-## 📊 Performance Considerations
-
-### RxJS Best Practices Applied
-
-1. **Memory Management**: Component properly unsubscribes in `ngOnDestroy`
-2. **Efficient Updates**: Using `BehaviorSubject.next()` for state updates
-3. **Derived State**: Automatic total calculation via subscription
-4. **Immutability**: Creating new arrays instead of mutating existing ones
-
-### What You'll Learn
-
-- How to manage reactive state with RxJS
-- Subscription management and cleanup
-- Data transformation with operators
-- Side effect handling (localStorage)
-- Testing reactive services
-
-## 🎯 Success Criteria
-
-You've successfully completed the Basic Level when:
-
-- ✅ Cart functionality works in the browser
-- ✅ Items persist across page refreshes
-- ✅ Calculations are accurate (including tax and discounts)
-- ✅ Code follows RxJS best practices
-- ✅ No memory leaks or subscription issues
-
-## 🚀 Ready for the Next Level?
-
-Once you've completed the Basic Level:
-
-1. **Review your implementation** against the solution file
-2. **Understand the RxJS patterns** you've implemented
-3. **Consider the challenges** of this approach (subscription management, boilerplate)
-4. **Move to [Intermediate Level](./INTERMEDIATE.md)** to see how Signals can simplify this code
-
-## 💡 Key Takeaways
-
-The RxJS approach provides:
-- **Powerful reactive patterns** for complex data flows
-- **Fine-grained control** over subscriptions and operators
-- **Mature ecosystem** with extensive operator library
-- **Excellent interoperability** with existing Angular code
-
-However, it also introduces:
-- **Subscription management complexity**
-- **Memory leak potential** if not handled properly  
-- **Verbose syntax** for simple state management
-- **Learning curve** for developers new to reactive programming
-
-In the next level, you'll see how Angular Signals can address these challenges while maintaining the reactive benefits!
-
----
-
-**Next:** [Intermediate Level - Signals + Computed](./INTERMEDIATE.md)
+**Don't touch:** `itemsSubject` / `items$`, the helpers (`generateId` / `saveCartToStorage` /
+`loadCartFromStorage`), the component (`src/app/basic/cart-rxjs/cart-rxjs.component.ts`).
+
+## 1. Constructor
+
+**Now:** empty.
+
+**Change to:** call `loadCartFromStorage()` once so a saved cart hydrates before first render.
+
+## 2. `addItem(product)`
+
+**Now:** `throw`.
+
+**Change to:** read `itemsSubject.value`; if a line with `productId === product.id` exists, +1 its
+quantity (build a new array, don't mutate); else append a new `CartItem` at `quantity: 1`
+(`generateId()` for `id`). Then `itemsSubject.next(newArray)` and `saveCartToStorage()`.
+
+## 3. `removeItem(productId)`
+
+**Now:** `throw`.
+
+**Change to:** `next()` the array with the matching `productId` filtered out, then save.
+
+## 4. `updateQuantity(productId, quantity)`
+
+**Now:** `throw`.
+
+**Change to:** `quantity <= 0` → delegate to `removeItem`; else `map` the matching line to the new
+quantity (new objects, no mutation). Then `next()` + save.
+
+## 5. `clearCart()`
+
+**Now:** `throw`.
+
+**Change to:** `next([])` and save (clears storage too).
+
+## 6. `getCartSummary(): Observable<CartSummary>`
+
+**Now:** `items$.pipe(map(() => ({ …all zeros })))`.
+
+**Change to:** `items$.pipe(map(items => …))` returning a `CartSummary`:
+- `totalItems` = sum of `quantity`
+- `totalPrice` = sum of `price × quantity` (gross, before discount)
+- `totalDiscount` = sum of `price × quantity × (discount ?? 0) / 100`
+- `tax` = `(totalPrice − totalDiscount) × 0.08` — flat **8%** in this level (no tiers)
+- `finalPrice` = `totalPrice − totalDiscount + tax`
+
+`CartSummary` is already defined in `shared/models` — just import it. Empty cart → all zeros (no guard needed).
+
+## 7. `getTotalItems(): Observable<number>`
+
+**Now:** `items$.pipe(map(() => 0))`.
+
+**Change to:** `items$.pipe(map(items => …))` returning the sum of `quantity`.
+
+## Acceptance criteria
+
+- [ ] Add / remove / update / clear work from the UI; setting quantity to 0 removes the line.
+- [ ] Totals are correct: `tax` is 8% of the discounted subtotal, `finalPrice` = subtotal + tax.
+- [ ] Cart count + summary update live as items change (the subscriptions react).
+- [ ] Cart survives a refresh (localStorage); state hydrates on init.
+- [ ] No leftover `throw`; `ng serve` compiles clean.
+
+Reference solution: `workshop-complete` branch. Next: [Intermediate](./INTERMEDIATE.md).

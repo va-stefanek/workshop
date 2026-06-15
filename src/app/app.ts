@@ -68,6 +68,13 @@ export class App {
       description: 'AI Agent Tools (Experimental)',
       difficulty: 'Advanced',
       topics: ['WebMCP', 'Tools', 'inputSchema', 'Signal Forms']
+    },
+    {
+      path: '/live-demo',
+      name: 'Live Demo',
+      description: 'Signals · computed · linkedSignal · resource',
+      difficulty: 'Talk',
+      topics: ['signal', 'computed', 'linkedSignal', 'resource', 'retry']
     }
   ];
 }

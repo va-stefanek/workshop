@@ -23,45 +23,24 @@ interface CartAnalytics {
 })
 export class AdvancedCartService {
   
-  // TODO: Create versioned cart state signal
-  // HINT: Use signal<CartState>() with initial state
-  // LEARNING: Versioned state enables:
-  // - Optimistic updates
-  // - Conflict detection
-  // - Audit trails
-  // - Rollback capabilities
-  // SYNTAX: private cartState = signal<CartState>({ items: [], lastUpdated: new Date(), version: 1 });
+  // PROVIDED FOR YOU — review this versioned state; you don't need to change it.
+  // LEARNING: Versioned state enables optimistic updates, conflict detection,
+  // audit trails, and rollback capabilities.
   private cartState = signal<CartState>({
     items: [],
     lastUpdated: new Date(),
     version: 1
   });
 
-  // TODO: Create session and history management signals
-  // HINT: Use signal<Date>() for sessionStartTime
-  // HINT: Use signal<CartState[]>() for cartHistory
-  // LEARNING: Session tracking enables analytics and user behavior insights
-  // SYNTAX: private sessionStartTime = signal<Date>(new Date());
-  // SYNTAX: private cartHistory = signal<CartState[]>([]);
+  // PROVIDED FOR YOU — review these. Session tracking enables analytics and
+  // user-behavior insights.
   private sessionStartTime = signal<Date>(new Date());
   private cartHistory = signal<CartState[]>([]);
   private maxHistorySize = 50;
 
-  // TODO: Create computed properties for external access
-  // REQUIREMENTS:
-  // 1. cartItems: Extract items from cartState
-  // 2. cartSummary: Advanced calculations with bulk discounts and luxury tax
-  // 3. cartAnalytics: Session tracking and category analysis
-  // 4. cartMetrics: Performance and usage metrics
-  //
-  // LEARNING: Advanced computed patterns:
-  // - Versioned state access
-  // - Complex business rules
-  // - Multi-level calculations
-  // - Real-time analytics
-  //
-  // SYNTAX HINT for cartItems:
-  // public readonly cartItems = computed(() => this.cartState().items);
+  // cartItems is PROVIDED as a worked example of a computed over cartState.
+  // You implement the other derived signals below — cartSummary, cartAnalytics,
+  // and cartMetrics — each documented in its own REQUIREMENTS comment.
   public readonly cartItems = computed(() => this.cartState().items);
 
   // TODO: Implement advanced cart summary with enterprise business rules
@@ -173,12 +152,8 @@ export class AdvancedCartService {
     }
   });
 
-  // TODO: Implement dependency injection
-  // LEARNING: Modern Angular injection
-  // - Use inject() function instead of constructor parameters
-  // - Better for functional programming patterns
-  // - Easier testing and mocking
-  // SYNTAX: private http = inject(HttpClient);
+  // PROVIDED FOR YOU — modern DI via the inject() function (instead of a
+  // constructor parameter).
   private http = inject(HttpClient);
 
   constructor() {

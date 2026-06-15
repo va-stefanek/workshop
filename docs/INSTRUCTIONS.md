@@ -73,7 +73,6 @@ shopping-cart-workshop/
 │   │   │   └── products.json  # Mock product data
 │   │   └── styles/           # CSS variables and components
 │   └── environments/
-├── tests/                    # Comprehensive test suites
 ├── docs/                     # Workshop documentation
 └── package.json
 ```
@@ -120,7 +119,6 @@ shopping-cart-workshop/
 ```bash
 pnpm start          # Start development server (http://localhost:4200)
 pnpm run build      # Build for production
-pnpm run test       # Run unit tests (Karma, Chrome)
 pnpm run watch      # Rebuild on changes (development config)
 ```
 
@@ -203,13 +201,6 @@ pnpm install
 - Refresh the page after opening DevTools
 - Make sure you're using a current Angular DevTools version (the app runs Angular 22)
 
-**Issue:** Tests failing
-**Solution:**
-```bash
-# Run tests once, headless
-pnpm exec ng test --watch=false --browsers=ChromeHeadless
-```
-
 **Issue:** TypeScript compilation errors
 **Solution:**
 - Ensure you're using TypeScript 5.4+
@@ -251,17 +242,15 @@ By the end of this workshop, you will:
 If you encounter issues during the workshop:
 
 1. **Check the documentation** in the `docs/` folder
-2. **Review the test files** for expected behavior
-3. **Use Angular DevTools** to inspect signal state
-4. **Look at the solution files** for reference
-5. **Check the browser console** for error messages
+2. **Use Angular DevTools** to inspect signal state
+3. **Look at the solution files** for reference
+4. **Check the browser console** for error messages
 
 ## 📝 Next Steps
 
 1. Start with the [Basic Level Instructions](./BASIC.md)
 2. Complete the exercises in order
-3. Run tests to verify your implementation
-4. Review the solution code when ready
-5. Move to the next level
+3. Review the solution code when ready
+4. Move to the next level
 
 Good luck with your Angular Signals journey! 🚀

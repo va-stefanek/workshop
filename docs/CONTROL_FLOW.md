@@ -378,9 +378,9 @@ Work inside `performance-monitor.component.ts` — its template has heavy sectio
 }
 ```
 
-## ✅ Testing Your Implementation
+## ✅ Verifying Your Implementation
 
-### Manual Testing Checklist
+### Manual Checklist
 
 **Control Flow Conversion**:
 - ✅ All @if conditions render correctly
@@ -401,13 +401,13 @@ Work inside `performance-monitor.component.ts` — its template has heavy sectio
 - ✅ Complex filter combinations update correctly
 - ✅ Performance improvements are noticeable
 
-### Performance Testing
+### Performance Measurement
 
 **Before/After Comparison**:
 ```typescript
-// Component for performance testing
-export class PerformanceTestComponent {
-  // Test old vs new syntax performance
+// Component for measuring render performance
+export class PerformanceDemoComponent {
+  // Compare old vs new syntax performance
   renderCount = signal(0);
   
   ngAfterViewInit() {
@@ -572,7 +572,7 @@ onComponentLoaded() {
 2. **Choose appropriate triggers** based on user interaction patterns
 3. **Provide meaningful loading states** for better UX
 4. **Monitor performance impact** with browser dev tools
-5. **Test on slower devices** to validate improvements
+5. **Check on slower devices** to validate improvements
 
 ## 🎯 Success Criteria
 

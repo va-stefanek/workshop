@@ -1,0 +1,196 @@
+/* Shared styles for the live-demo concept widgets. */
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+  font-size: 1.05rem;
+  color: var(--text-primary, #111827);
+}
+
+.demo--center {
+  align-items: center;
+  text-align: center;
+}
+
+.big-value {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: var(--space-2, 0.5rem) 0;
+  color: var(--primary-color, #667eea);
+  font-variant-numeric: tabular-nums;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+}
+
+.line {
+  padding: var(--space-2, 0.5rem) 0;
+  border-bottom: 1px solid var(--gray-200, #e5e7eb);
+}
+
+.grow {
+  flex: 1 1 auto;
+}
+
+.muted {
+  color: var(--text-tertiary, #6b7280);
+  font-size: 0.85em;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4, 1rem);
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.kv strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.hl {
+  color: var(--primary-color, #667eea);
+}
+
+.hint {
+  margin: var(--space-2, 0.5rem) 0 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary, #374151);
+  line-height: 1.5;
+}
+
+code {
+  background: var(--gray-100, #f3f4f6);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.88em;
+}
+
+hr {
+  width: 100%;
+  border: none;
+  border-top: 1px solid var(--gray-200, #e5e7eb);
+  margin: var(--space-2, 0.5rem) 0;
+}
+
+/* Buttons */
+.btn {
+  border: 1px solid var(--gray-300, #d1d5db);
+  background: var(--white, #fff);
+  color: var(--text-primary, #111827);
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:hover {
+  border-color: var(--primary-color, #667eea);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--sm {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.btn--primary {
+  background: var(--primary-color, #667eea);
+  border-color: var(--primary-color, #667eea);
+  color: var(--white, #fff);
+}
+
+.btn--ghost {
+  background: transparent;
+}
+
+/* Resource states */
+.loading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  color: var(--text-secondary, #374151);
+  font-weight: 600;
+}
+
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--gray-300, #d1d5db);
+  border-top-color: var(--primary-color, #667eea);
+  border-radius: 50%;
+  animation: demo-spin 0.7s linear infinite;
+}
+
+@keyframes demo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  color: var(--error-color, #ef4444);
+  font-weight: 600;
+  margin: 0;
+}
+
+.error-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2, 0.5rem);
+  align-items: flex-start;
+  padding: var(--space-3, 0.75rem);
+  border: 1px solid var(--error-light, #f87171);
+  background: color-mix(in srgb, var(--error-color, #ef4444) 8%, transparent);
+  border-radius: 8px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.95rem;
+}
+
+.product-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 16rem;
+  overflow-y: auto;
+  border: 1px solid var(--gray-200, #e5e7eb);
+  border-radius: 8px;
+}
+
+.product-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 0.75rem);
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--gray-100, #f3f4f6);
+  font-size: 0.95rem;
+}
+
+.product-list li:last-child {
+  border-bottom: none;
+}

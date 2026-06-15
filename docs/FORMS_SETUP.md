@@ -159,7 +159,7 @@ Look for these confirmation messages:
 🔧 Services initialized
 ```
 
-### 4. Test Basic Functionality
+### 4. Verify Basic Functionality
 
 1. Click through each workshop tab
 2. Verify components load without errors
@@ -209,9 +209,6 @@ open http://localhost:4200/signal-forms
 ### 2. During Development
 
 ```bash
-# Run tests in watch mode (Karma)
-pnpm run test
-
 # Type-check via a production build
 pnpm run build
 ```
@@ -221,8 +218,7 @@ pnpm run build
 1. Navigate to the specific component file
 2. Look for `TODO:` comments for guidance
 3. Implement the required functionality
-4. Test in browser
-5. Run tests to verify implementation
+4. Check it in the browser
 
 ## 📊 Performance Configuration
 
@@ -280,16 +276,16 @@ The workshop uses localStorage for form persistence. Ensure it's enabled in your
 
 ## 📱 Mobile Development
 
-### Responsive Testing
+### Responsive Checks
 
-Test the workshop on different screen sizes:
+Check the workshop on different screen sizes:
 
 Use the responsive mode in your browser DevTools (Cmd+Shift+M in Chrome)
-to test phone/tablet breakpoints.
+to check phone/tablet breakpoints.
 
 ### Touch Support
 
-Ensure touch events work correctly on custom controls by testing on actual mobile devices or browser dev tools.
+Ensure touch events work correctly on custom controls by checking on actual mobile devices or browser dev tools.
 
 ## 🚀 Production Deployment
 

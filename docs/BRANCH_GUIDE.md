@@ -62,6 +62,5 @@ Solutions only ever change on `workshop-complete` (and its variants); exercises 
 Before a workshop session:
 
 - [ ] `pnpm run build` passes on the branch you will use
-- [ ] `pnpm exec ng test --watch=false --browsers=ChromeHeadless` passes
 - [ ] The docs module you will teach matches the branch (see table above)
 - [ ] Node 22.22+/24+ active (`nvm use 24`) — Angular CLI 22 requirement

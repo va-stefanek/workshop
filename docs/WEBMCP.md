@@ -95,7 +95,7 @@ Requires `provideExperimentalWebMcpForms()` in the app providers.
 Angular registers tools into `document.modelContext ?? navigator.modelContext` and **silently does nothing** when neither exists. Options:
 
 - **Chrome 149+** — WebMCP origin trial (since June 2026). Locally: enable the WebMCP flag in `chrome://flags`. The page badge shows "Native browser WebMCP".
-- **Any other browser** — `src/app/webmcp/model-context-shim.ts` installs a minimal `document.modelContext` before bootstrap, so the demo page can list and invoke the registered tools. There is also a community polyfill: `@mcp-b/webmcp-polyfill` (useful for unit tests too).
+- **Any other browser** — `src/app/webmcp/model-context-shim.ts` installs a minimal `document.modelContext` before bootstrap, so the demo page can list and invoke the registered tools. There is also a community polyfill: `@mcp-b/webmcp-polyfill`.
 
 ## 🤖 Proving a REAL agent sees the tools
 

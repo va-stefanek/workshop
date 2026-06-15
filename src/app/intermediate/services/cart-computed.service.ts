@@ -6,12 +6,9 @@ import { CartItem, CartSummary, Product } from '../../shared/models';
 })
 export class CartComputedService {
 
-  // TODO: Create private writable signals for cart state
-  // HINT: Use signal<CartItem[]>([]) for items
-  // HINT: Use signal<string>('all') for selectedCategory
-  // HINT: Use signal<string>('') for searchQuery
-  // HINT: Use signal<'asc' | 'desc'>('asc') for sortOrder
-  // LEARNING: Signals are the new reactive primitive in Angular
+  // PROVIDED FOR YOU — review this state; you don't need to change it.
+  // These are the core writable signals that back the cart.
+  // LEARNING: Signals are the reactive primitive in Angular.
   // - They automatically track dependencies
   // - Components can read them directly in templates
   // - Updates are fine-grained and efficient
@@ -20,13 +17,9 @@ export class CartComputedService {
   private searchQuery = signal<string>('');
   private sortOrder = signal<'asc' | 'desc'>('asc');
 
-  // TODO: Create readonly signals for external access
-  // HINT: Use asReadonly() to expose signals that cannot be modified from outside
-  // LEARNING: This protects your internal state while allowing components to read values
-  // SYNTAX: public readonly cartItems = this.items.asReadonly();
-  // SYNTAX: public readonly currentCategory = this.selectedCategory.asReadonly();
-  // SYNTAX: public readonly currentSearch = this.searchQuery.asReadonly();
-  // SYNTAX: public readonly currentSort = this.sortOrder.asReadonly();
+  // PROVIDED FOR YOU — review this. These readonly accessors expose state to
+  // components without letting them mutate it directly.
+  // LEARNING: asReadonly() protects internal state while still allowing reads.
   public readonly cartItems = this.items.asReadonly();
   public readonly currentCategory = this.selectedCategory.asReadonly();
   public readonly currentSearch = this.searchQuery.asReadonly();
@@ -159,25 +152,6 @@ export class CartComputedService {
       shippingCost: 15,
       amountForFreeShipping: 500,
       estimatedDelivery: '5-7 business days'
-    };
-  });
-
-  // TODO: Implement computed for recommendations
-  // REQUIREMENTS:
-  // 1. Get unique categories from current cart
-  // 2. Recommend categories not in cart (from: electronics, clothing, books)
-  // 3. Calculate total unique items and average item price
-  //
-  // LEARNING: Advanced array operations in computed
-  // - Use Set for unique values: [...new Set(items.map(...))]
-  // - Filter for recommendations: categories.filter(cat => !inCart.includes(cat))
-  public readonly recommendations = computed(() => {
-    // TODO: Implement recommendations calculation
-    // TEMPORARY: Return empty recommendations for compilation - students must implement recommendation logic
-    return {
-      suggestedCategories: [],
-      totalUniqueItems: 0,
-      averageItemPrice: 0
     };
   });
 

@@ -17,7 +17,6 @@ By completing this module, you will:
 - Understand injection context and runInInjectionContext usage
 - Implement modern service composition patterns
 - Build functional approaches to dependency injection
-- Create testable services with inject() patterns
 - Design provider hierarchies and scoping strategies
 
 ## 📁 Files You'll Work With
@@ -34,7 +33,6 @@ By completing this module, you will:
 **Supporting Files:**
 - `src/app/inject/utils/injection-utils.ts` - Utility functions with inject()
 - `src/app/inject/config/cart-config.ts` - Configuration and tokens
-- `src/app/inject/testing/` - Testing patterns for inject() services
 
 ## 🏗 Architecture Overview
 
@@ -346,101 +344,7 @@ export function createInjectionContext(providers: Provider[]) {
 //   enforcing quantity > 0, price > 0 and config.maxItems
 ```
 
-### Task 6: Testing Patterns with inject()
-
-**Goal**: Create comprehensive testing strategies for inject() based services.
-
-**Testing Examples**:
-```typescript
-// TODO: Testing inject() services
-describe('InjectCartService', () => {
-  let service: InjectCartService;
-  let httpMock: HttpTestingController;
-  let storageMock: jasmine.SpyObj<StorageService>;
-  let analyticsMock: jasmine.SpyObj<CartAnalyticsService>;
-
-  beforeEach(() => {
-    storageMock = jasmine.createSpyObj('StorageService', ['getItem', 'setItem']);
-    analyticsMock = jasmine.createSpyObj('CartAnalyticsService', ['trackEvent']);
-
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
-        InjectCartService,
-        { provide: STORAGE_SERVICE, useValue: storageMock },
-        { provide: CartAnalyticsService, useValue: analyticsMock },
-        { provide: CART_CONFIG, useValue: TEST_CART_CONFIG }
-      ]
-    });
-
-    service = TestBed.inject(InjectCartService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  it('should create service with injected dependencies', () => {
-    expect(service).toBeTruthy();
-    expect(service.items()).toEqual([]);
-  });
-
-  it('should add item and track analytics', () => {
-    const product: Product = { id: '1', name: 'Test', price: 10 };
-    
-    service.addItem(product);
-    
-    expect(service.items().length).toBe(1);
-    expect(analyticsMock.trackEvent).toHaveBeenCalledWith('item_added', 
-      { productId: '1' });
-  });
-
-  it('should save to storage when items change', () => {
-    const product: Product = { id: '1', name: 'Test', price: 10 };
-    
-    service.addItem(product);
-    
-    expect(storageMock.setItem).toHaveBeenCalledWith('inject-cart', 
-      jasmine.any(String));
-  });
-});
-
-// TODO: Testing functional services
-describe('Functional Cart Services', () => {
-  let injectionContext: <T>(fn: () => T) => T;
-
-  beforeEach(() => {
-    const providers = [
-      provideHttpClient(),
-      { provide: CART_CONFIG, useValue: TEST_CART_CONFIG },
-      { provide: STORAGE_SERVICE, useValue: storageMock }
-    ];
-    
-    injectionContext = createInjectionContext(providers);
-  });
-
-  it('should create functional cart analytics', () => {
-    const analytics = injectionContext(() => createCartAnalytics());
-    
-    expect(analytics.trackEvent).toBeDefined();
-    expect(analytics.trackPageView).toBeDefined();
-  });
-
-  it('should create cart validator with config', () => {
-    const validator = injectionContext(() => createCartValidator());
-    
-    const result = validator.validateItem({
-      id: '1',
-      productId: '1',
-      name: 'Test',
-      price: 10,
-      quantity: 1,
-      addedAt: new Date()
-    });
-    
-    expect(result.isValid).toBe(true);
-  });
-});
-```
-
-### Task 7: Advanced Provider Hierarchies
+### Task 6: Advanced Provider Hierarchies
 
 **Goal**: Create sophisticated provider hierarchies and scoping strategies.
 
@@ -465,14 +369,6 @@ export function provideCartFeature() {
       }
     }
   ]);
-}
-
-export function provideCartTesting() {
-  return [
-    { provide: STORAGE_SERVICE, useClass: MockStorageService },
-    { provide: CartAnalyticsService, useClass: MockAnalyticsService },
-    { provide: CART_CONFIG, useValue: TEST_CART_CONFIG }
-  ];
 }
 
 // TODO: Route-level providers
@@ -502,9 +398,9 @@ export const CART_ROUTES: Routes = [
 ];
 ```
 
-## ✅ Testing Your Implementation
+## ✅ Verifying Your Implementation
 
-### Manual Testing Checklist
+### Manual Checklist
 
 **inject() Conversion**:
 - ✅ All components work with inject() instead of constructor injection
@@ -520,16 +416,6 @@ export const CART_ROUTES: Routes = [
 - ✅ Functional services work correctly
 - ✅ Service factories create properly configured instances
 - ✅ Injection utilities handle edge cases correctly
-
-### Automated Testing
-
-```bash
-# Run tests for inject-based services
-npm run test -- --grep="inject"
-
-# Test specific injection patterns
-npm run test -- src/app/inject/services/inject-cart.service.spec.ts
-```
 
 ## 🧪 Code Examples
 
@@ -704,11 +590,6 @@ export class DebugInjectService {
 - ✅ Optional injection with fallbacks
 - ✅ Better integration with functional patterns
 
-**Testing**:
-- ✅ Easier service mocking
-- ✅ More granular dependency control
-- ✅ Better isolation testing
-
 ### Performance Considerations
 
 ```typescript
@@ -735,7 +616,6 @@ You've successfully completed the Inject module when:
 - ✅ Advanced provider functions work correctly
 - ✅ Optional and conditional injection patterns work as expected
 - ✅ Functional service composition patterns are implemented
-- ✅ Testing patterns work with inject() services
 - ✅ Provider hierarchies and scoping work correctly
 - ✅ Injection utilities handle edge cases properly
 - ✅ Performance is equivalent or better than constructor injection

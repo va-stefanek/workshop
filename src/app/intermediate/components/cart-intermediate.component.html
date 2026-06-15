@@ -119,14 +119,14 @@
           @for (item of cartService.filteredItems(); track trackByProductId($index, item)) {
             <div class="cart-item">
               <img [src]="item.image" [alt]="item.name" class="item-image" />
-              
+
               <div class="item-details-section">
                 <div class="item-info">
                   <h4>{{ item.name }}</h4>
                   <p class="item-category">{{ item.category }}</p>
                   <p class="item-price">${{ item.price }} each</p>
                 </div>
-                
+
                 <div class="item-controls">
                   <div class="quantity-controls">
                     <button
@@ -146,13 +146,13 @@
                       +
                     </button>
                   </div>
-                  
+
                   <div class="item-total">
                     ${{ (item.price * item.quantity).toFixed(2) }}
                   </div>
                 </div>
               </div>
-              
+
               <div class="item-actions">
                 <button
                   class="btn btn-danger btn-small"
