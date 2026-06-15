@@ -2,8 +2,8 @@
 
 **Master the transition from RxJS to Angular Signals through building a comprehensive shopping cart application**
 
-[![Angular](https://img.shields.io/badge/Angular-18+-red.svg)](https://angular.io/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.4+-blue.svg)](https://www.typescriptlang.org/)
+[![Angular](https://img.shields.io/badge/Angular-22-red.svg)](https://angular.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-blue.svg)](https://www.typescriptlang.org/)
 [![Signals](https://img.shields.io/badge/Angular_Signals-Latest-green.svg)](https://angular.dev/guide/signals)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -18,14 +18,15 @@ This comprehensive workshop guides you through the evolution of reactive program
 - **Build Production-Ready UIs**: Implement responsive, accessible, and performant interfaces
 - **Advanced State Management**: Handle complex application state with modern patterns
 - **Performance Optimization**: Leverage signals for optimal change detection
-- **Real-World Patterns**: Apply enterprise-grade architecture and testing strategies
+- **Real-World Patterns**: Apply enterprise-grade architecture and best practices
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Node.js** 18+ and **npm** 9+
-- **Angular CLI** 18+
+- **Node.js** 22.22+ or 24+ (required by Angular CLI 22)
+- **pnpm** 10+ (pinned via the `packageManager` field)
+- **Angular CLI** 22
 - Modern browser with developer tools
 - **Angular DevTools** extension (recommended)
 
@@ -37,10 +38,10 @@ git clone <repository-url>
 cd shopping-cart-workshop
 
 # Install dependencies
-npm install
+pnpm install
 
 # Start the development server
-npm start
+ng serve
 
 # Open browser to http://localhost:4200
 ```
@@ -113,7 +114,6 @@ Our cart implementation features a modern, responsive 3-column layout:
 |--------|---------|--------|
 | `workshop-starter` | Educational skeleton code with TODOs | ✅ Current |
 | `workshop-complete` | Full solution with comments | ✅ Ready |
-| `production-ready` | Optimized production implementation | ✅ Ready |
 | `main` | Final polished version | 🔄 In Progress |
 
 ### Project Structure
@@ -132,27 +132,15 @@ shopping-cart-workshop/
 │   │   └── components/     # Feature-rich components
 │   └── shared/            # Common utilities and models
 ├── docs/                  # Comprehensive documentation
-├── tests/                 # Test suites for each level
 └── assets/               # Static resources and data
 ```
 
 ## 🛠 Available Commands
 
 ```bash
-# Development
-npm start                    # Start development server
-npm run build               # Build for production
-npm run test                # Run all tests
-npm run lint                # Lint the codebase
-
-# Level-specific testing
-npm run test:basic          # Test basic level
-npm run test:intermediate   # Test intermediate level
-npm run test:advanced       # Test advanced level
-
-# Documentation
-npm run docs:serve          # Serve documentation locally
-npm run docs:build          # Build documentation
+ng serve            # Start the dev server (http://localhost:4200)
+pnpm build          # Production build
+pnpm watch          # Rebuild on changes (development config)
 ```
 
 ## ✨ Features Implemented
@@ -181,15 +169,9 @@ npm run docs:build          # Build documentation
 - ✅ **Error Handling**: User-friendly error messages
 - ✅ **Performance**: Optimized rendering and minimal re-renders
 
-## 🧪 Testing Strategy
+## ✅ Quality Checklist
 
-### Automated Testing
-- **Unit Tests**: Comprehensive service and component testing
-- **Integration Tests**: End-to-end workflow validation
-- **Performance Tests**: Signal update efficiency testing
-- **Accessibility Tests**: Automated a11y validation
-
-### Manual Testing Checklist
+Verify in the browser as you go:
 - ✅ Cross-browser compatibility (Chrome, Firefox, Safari, Edge)
 - ✅ Responsive design on various screen sizes
 - ✅ Keyboard navigation and screen reader support
@@ -204,9 +186,7 @@ npm run docs:build          # Build documentation
 | [Basic Level Guide](docs/BASIC.md) | RxJS implementation |
 | [Intermediate Guide](docs/INTERMEDIATE.md) | Signals transition |
 | [Advanced Guide](docs/ADVANCED.md) | Resource API mastery |
-| [Layout Guide](docs/LAYOUT_IMPROVEMENTS.md) | UI design patterns |
 | [Branch Guide](docs/BRANCH_GUIDE.md) | Git workflow |
-| [Changelog](docs/CHANGELOG.md) | Version history |
 
 ## 🎯 Success Criteria
 
